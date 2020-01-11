@@ -1,33 +1,41 @@
 package soya.framework.settler.server.server;
 
+import com.google.common.eventbus.EventBus;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public class Server {
+public abstract class Server {
+
     private static Server instance;
 
-    protected File home = null;
-    protected File configFile = null;
+    private String serverName;
+    private File home;
+
+    private EventBus eventBus;
 
     protected Server() {
         try {
             init();
             instance = this;
+
         } catch (Exception e) {
             throw new ExceptionInInitializerError(e);
         }
     }
 
-    public File getHome() {
-        return home;
+    public static Server getInstance() {
+        return instance;
     }
 
     protected void init() throws URISyntaxException, IOException {
-        URL url = Server.class.getProtectionDomain().getCodeSource().getLocation();
+        this.serverName = name();
+        this.eventBus = new EventBus(serverName);
 
+        URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
         if ("jar".equalsIgnoreCase(url.getProtocol())) {
             String path = url.getPath();
             int index = path.indexOf(".jar");
@@ -40,7 +48,7 @@ public class Server {
 
         } else {
             File userHome = new File(System.getProperty("user.home"));
-            home = new File(userHome, "Application/settler");
+            home = new File(userHome, "Application/" + serverName);
             if (!home.exists()) {
                 home.mkdirs();
             }
@@ -53,16 +61,31 @@ public class Server {
         }
         System.setProperty("pipeline.server.conf.dir", conf.getAbsolutePath());
 
-        File pipeline = new File(home, "pipeline");
-        if (!pipeline.exists()) {
-            pipeline.mkdirs();
-        }
-        System.setProperty("pipeline.server.deployment.dir", pipeline.getAbsolutePath());
-
-        configFile = new File(conf, "server-config.properties");
+        File configFile = new File(conf, "server-config.properties");
         if (!configFile.exists()) {
             configFile.createNewFile();
         }
+    }
 
+    protected String name() {
+        return "pipeline-server";
+    }
+
+    public String getServerName() {
+        return serverName;
+    }
+
+    public File getHome() {
+        return home;
+    }
+
+    public void publish(ServiceEvent event) {
+        eventBus.post(event);
+    }
+
+    protected void register(ServiceEventListener... listeners) {
+        for(ServiceEventListener listener: listeners) {
+            eventBus.register(listener);
+        }
     }
 }
