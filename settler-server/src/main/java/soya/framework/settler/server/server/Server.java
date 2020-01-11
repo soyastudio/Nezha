@@ -65,6 +65,15 @@ public abstract class Server {
         if (!configFile.exists()) {
             configFile.createNewFile();
         }
+
+        System.setProperty("pipeline.server.home", home.getAbsolutePath());
+        File log = new File(home, "log");
+        if (!log.exists()) {
+            log.mkdirs();
+        }
+        System.setProperty("pipeline.server.log.dir", log.getAbsolutePath());
+
+
     }
 
     protected String name() {
@@ -78,6 +87,8 @@ public abstract class Server {
     public File getHome() {
         return home;
     }
+
+    public abstract <T> T getService(Class<T> type);
 
     public void publish(ServiceEvent event) {
         eventBus.post(event);

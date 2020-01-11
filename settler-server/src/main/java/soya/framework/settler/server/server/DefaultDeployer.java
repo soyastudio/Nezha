@@ -14,7 +14,8 @@ public class DefaultDeployer implements PipelineDeployer {
 
     @Override
     public PipelineDeployment create(File dir) {
-        return new PipelineDeployment(dir);
+        PipelineDeployment deployment = new PipelineDeployment(dir);
+        return deployment;
     }
 
     @Override
@@ -82,6 +83,16 @@ public class DefaultDeployer implements PipelineDeployer {
             waitForDeploymentReady(deployment, 30000L);
         }
 
+        if (PipelineDeployment.DeploymentState.STARTED.equals(deployment.getState())) {
+            stop(deployment);
+            while (!PipelineDeployment.DeploymentState.STOPPED.equals(deployment.getState())) {
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         try {
             FileUtils.forceDelete(deployment.getBaseDir());

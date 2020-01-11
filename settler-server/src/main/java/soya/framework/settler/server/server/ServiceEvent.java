@@ -11,7 +11,7 @@ public abstract class ServiceEvent {
     private final String id;
     private final long createdTime;
 
-    public ServiceEvent() {
+    protected ServiceEvent() {
         this.type = getClass().getName();
         this.id = UUID.randomUUID().toString();
         this.createdTime = System.currentTimeMillis();

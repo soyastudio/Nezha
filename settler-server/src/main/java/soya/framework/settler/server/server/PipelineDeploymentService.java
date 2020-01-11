@@ -17,6 +17,7 @@ public class PipelineDeploymentService implements ServiceEventListener<PipelineD
     private File pipelineHome;
     private File deploymentDir;
     private Map<String, PipelineDeployment> deployments = new ConcurrentHashMap<>();
+
     private PipelineDeployer deployer = new DefaultDeployer();
 
     @PostConstruct
@@ -80,6 +81,7 @@ public class PipelineDeploymentService implements ServiceEventListener<PipelineD
                         break;
                     case PipelineDeploymentEvent.DELETE_EXTENSION:
                         deployer.delete(deployment);
+                        deployments.remove(deployment.getName());
                         break;
 
                     default:
@@ -108,6 +110,7 @@ public class PipelineDeploymentService implements ServiceEventListener<PipelineD
 
         @Override
         public void run() {
+            Server.getInstance().publish(PipelineLogEvent.builder(deployment.getName(), PipelineLogEvent.EventType.CREATE).create());
             deployer.start(deployment);
         }
     }
@@ -127,5 +130,7 @@ public class PipelineDeploymentService implements ServiceEventListener<PipelineD
             }
         }
     }
+
+
 
 }
