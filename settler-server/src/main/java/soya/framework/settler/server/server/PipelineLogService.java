@@ -1,10 +1,12 @@
 package soya.framework.settler.server.server;
 
 import com.google.common.eventbus.Subscribe;
+import org.apache.commons.io.input.ReversedLinesFileReader;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class PipelineLogService implements ServiceEventListener<PipelineLogEvent> {
 
@@ -22,23 +24,50 @@ public class PipelineLogService implements ServiceEventListener<PipelineLogEvent
     public void onEvent(PipelineLogEvent pipelineLogEvent) {
         switch (pipelineLogEvent.getEventType()) {
             case CREATE:
-                try {
-                    initPipelineLog(pipelineLogEvent.getPipeline());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                initPipelineLog(pipelineLogEvent.getPipeline());
                 break;
-
             default:
                 ;
         }
     }
 
-    private void initPipelineLog(String pipeline) throws IOException {
+    public String read(String pipeline, int offset,
+                       int limit, boolean reverse, boolean withIndex) throws IOException {
+
+        StringBuilder builder = new StringBuilder();
+        File file = new File(baseDir, pipeline + ".log");
+        ReversedLinesFileReader reversedLinesFileReader = new ReversedLinesFileReader(file, StandardCharsets.UTF_8);
+
+        String line = reversedLinesFileReader.readLine();
+        int count = 0;
+        while (line != null) {
+            count++;
+            if (count > offset + limit) {
+                break;
+            } else if (count > offset) {
+                if (withIndex) {
+                    builder.append(count - 1).append("\t");
+                }
+                builder.append(line).append("\n");
+            }
+
+            line = reversedLinesFileReader.readLine();
+        }
+        reversedLinesFileReader.close();
+        return builder.toString();
+
+    }
+
+    private void initPipelineLog(String pipeline) {
         File file = new File(baseDir, pipeline + ".log");
         if (!file.exists()) {
-            System.out.println("================ creating logfile: " + file);
-            file.createNewFile();
+            ((Runnable) () -> {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    Server.getInstance().publish(ServiceExceptionEvent.newInstance(e));
+                }
+            }).run();
         }
     }
 }

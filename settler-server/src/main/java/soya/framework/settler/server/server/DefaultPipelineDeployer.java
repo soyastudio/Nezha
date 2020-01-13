@@ -5,7 +5,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class DefaultDeployer implements PipelineDeployer {
+public class DefaultPipelineDeployer implements PipelineDeployer {
 
     @Override
     public boolean deployable(File dir) {
@@ -41,6 +41,7 @@ public class DefaultDeployer implements PipelineDeployer {
 
             ((Runnable) () -> {
                 try {
+
                     doStart(deployment);
                     deployment.setState(PipelineDeployment.DeploymentState.STARTED);
 
@@ -103,7 +104,7 @@ public class DefaultDeployer implements PipelineDeployer {
     }
 
     protected void doStart(PipelineDeployment deployment) throws Exception {
-
+        Server.getInstance().publish(new PipelineScheduleEvent(deployment.getName(), deployment.getBaseDir()));
     }
 
     protected void doStop(PipelineDeployment deployment) throws Exception {

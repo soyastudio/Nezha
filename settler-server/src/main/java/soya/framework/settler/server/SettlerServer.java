@@ -1,17 +1,16 @@
 package soya.framework.settler.server;
 
+import org.quartz.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
-import soya.framework.settler.server.server.PipelineDeploymentService;
-import soya.framework.settler.server.server.PipelineLogService;
-import soya.framework.settler.server.server.Server;
-import soya.framework.settler.server.server.ServiceEventListener;
+import soya.framework.settler.server.server.*;
 
 @SpringBootApplication(scanBasePackages = {"soya.framework.settler.server"})
 public class SettlerServer extends Server {
@@ -44,5 +43,10 @@ public class SettlerServer extends Server {
     @Bean
     PipelineLogService pipelineLogService() {
         return new PipelineLogService();
+    }
+
+    @Bean
+    PipelineService pipelineService(@Autowired Scheduler scheduler) {
+        return new PipelineService(scheduler);
     }
 }

@@ -7,10 +7,7 @@ import org.apache.commons.io.FileUtils;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PipelineDeploymentService implements ServiceEventListener<PipelineDeploymentEvent> {
@@ -18,7 +15,13 @@ public class PipelineDeploymentService implements ServiceEventListener<PipelineD
     private File deploymentDir;
     private Map<String, PipelineDeployment> deployments = new ConcurrentHashMap<>();
 
-    private PipelineDeployer deployer = new DefaultDeployer();
+    private PipelineDeployer deployer = new DefaultPipelineDeployer();
+
+    public List<PipelineDeployment> getDeployments() {
+        List<PipelineDeployment> list = new ArrayList<>(deployments.values());
+        Collections.sort(list);
+        return list;
+    }
 
     @PostConstruct
     void init() {
