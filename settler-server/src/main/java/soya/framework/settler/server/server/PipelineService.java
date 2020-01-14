@@ -3,6 +3,7 @@ package soya.framework.settler.server.server;
 import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,10 +171,18 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
                         builder.functions(parse(e.getValue(), Properties.class, base));
                         break;
                     case "init-flow":
-                        builder.initFlow(parse(e.getValue(), Pipeline.Flow.class, base));
+                        if (e.getValue() instanceof Map) {
+                            builder.initFlow(parse(e.getValue(), Properties.class, base));
+                        } else {
+                            throw new IllegalArgumentException("Illegal format for 'init-flow' configuration, 'map' style is expected.");
+                        }
                         break;
                     case "main-flow":
-                        builder.mainFlow(parse(e.getValue(), Pipeline.Flow.class, base));
+                        if (e.getValue() instanceof List) {
+                            builder.mainFlow(parse(e.getValue(), JsonArray.class, base));
+                        } else {
+                            throw new IllegalArgumentException("Illegal format for 'main-flow' configuration, 'list' style is expected.");
+                        }
                         break;
                     case "scheduler":
                         builder.scheduler(parse(e.getValue(), Pipeline.Scheduler.class, base));
@@ -187,6 +196,8 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             System.out.println(gson.toJson(pipeline.getConfiguration()));
+
+            pipeline.init(Server.getInstance());
 
             return pipeline;
         }
@@ -211,7 +222,23 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
                     }
                 }
 
-               t = (T) properties;
+                t = (T) properties;
+
+            } else if (JsonArray.class.isAssignableFrom(type)) {
+                JsonArray array = new JsonArray();
+                if (config instanceof String) {
+
+
+                } else if (config instanceof List) {
+                    List<Object> list = (List<Object>) config;
+                    list.forEach(e -> {
+                        if (e instanceof String) {
+                            array.add((String) e);
+                        }
+                    });
+                }
+
+                return (T) array;
 
             } else {
                 t = gson.fromJson(gson.toJson(config), type);

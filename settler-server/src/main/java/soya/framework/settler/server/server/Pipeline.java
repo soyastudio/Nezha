@@ -1,6 +1,9 @@
 package soya.framework.settler.server.server;
 
+import com.google.gson.JsonArray;
+
 import java.io.File;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
@@ -14,8 +17,8 @@ public class Pipeline {
     private File base;
     private Configuration configuration;
 
-    private Properties properties;
-
+    private ExternalContext externalContext;
+    private Properties properties = new Properties();
     private Map<String, Object> attributes = new ConcurrentHashMap<>();
 
     private Pipeline(File base) {
@@ -35,31 +38,51 @@ public class Pipeline {
         return configuration;
     }
 
-    protected void init() {
-        evaluateProperties(configuration.metadata);
-        defineFunctions(configuration.functions);
-        loadData(configuration.initFlow);
+    public void init(ExternalContext externalContext) {
+        if (this.externalContext != null) {
+            throw new IllegalStateException("Pipeline is already initialized.");
+        }
+        this.externalContext = externalContext;
+
+        evaluateProperties(configuration.metadata, externalContext);
+        defineFunctions(configuration.functions, externalContext);
+        loadData(configuration.initFlow, externalContext);
+        initWorkflow(configuration.mainFlow, externalContext);
+
     }
 
-    private void evaluateProperties(Properties metadata) {
-        System.out.println("--------------------- todo: evaluate properties for" + name);
+    private void evaluateProperties(Properties metadata, ExternalContext externalContext) {
+        if(metadata != null) {
+            Enumeration<?> enumeration = metadata.propertyNames();
+            while (enumeration.hasMoreElements()) {
+                String key = (String) enumeration.nextElement();
+                String value = configuration.metadata.getProperty(key);
+
+                key = key.replaceAll("\\.", "_");
+                value = evaluateProperty(value, externalContext);
+
+                System.out.println("----------- set property " + key + " = " + value);
+
+                properties.setProperty(key, value);
+            }
+        }
     }
 
-    private void defineFunctions(Properties functions) {
+    private String evaluateProperty(String value, ExternalContext externalContext) {
+        return value;
+    }
+
+    private void defineFunctions(Properties functions, ExternalContext externalContext) {
         System.out.println("--------------------- todo: define functions for " + name);
     }
 
-    private void loadData(Flow init) {
+    private void loadData(Properties init, ExternalContext externalContext) {
         System.out.println("--------------------- todo: load cached data for " + name);
     }
 
-    public Future<PipelineExecution> execute() {
-        return Server.getInstance().getService(ExecutorService.class).submit(new Callable<PipelineExecution>() {
-            @Override
-            public PipelineExecution call() throws Exception {
-                return null;
-            }
-        });
+    private void initWorkflow(JsonArray mainFlow, ExternalContext externalContext) {
+
+        System.out.println("--------------------- todo: create workflow for " + name);
     }
 
     public static Builder builder(File base) {
@@ -70,8 +93,8 @@ public class Pipeline {
         private File base;
         private Properties metadata;
         private Properties functions;
-        private Flow initFlow;
-        private Flow mainFlow;
+        private Properties initFlow;
+        private JsonArray mainFlow;
         private Scheduler scheduler;
 
         private Builder(File base) {
@@ -88,12 +111,12 @@ public class Pipeline {
             return this;
         }
 
-        public Builder initFlow(Flow flow) {
+        public Builder initFlow(Properties flow) {
             this.initFlow = flow;
             return this;
         }
 
-        public Builder mainFlow(Flow flow) {
+        public Builder mainFlow(JsonArray flow) {
             this.mainFlow = flow;
             return this;
         }
@@ -105,6 +128,10 @@ public class Pipeline {
         }
 
         public Pipeline create() {
+            if(mainFlow == null) {
+                throw new IllegalArgumentException("'main-flow' is required.");
+            }
+
             Pipeline pipeline = new Pipeline(base);
             Configuration configuration = new Configuration();
             configuration.metadata = metadata;
@@ -114,7 +141,6 @@ public class Pipeline {
             configuration.scheduler = scheduler;
             pipeline.configuration = configuration;
 
-            pipeline.init();
             return pipeline;
         }
     }
@@ -123,8 +149,8 @@ public class Pipeline {
 
         private Properties metadata;
         private Properties functions;
-        private Flow initFlow;
-        private Flow mainFlow;
+        private Properties initFlow;
+        private JsonArray mainFlow;
         private Scheduler scheduler;
 
         private Configuration() {
@@ -138,11 +164,11 @@ public class Pipeline {
             return functions;
         }
 
-        public Flow getInitFlow() {
+        public Properties getInitFlow() {
             return initFlow;
         }
 
-        public Flow getMainFlow() {
+        public JsonArray getMainFlow() {
             return mainFlow;
         }
 
@@ -171,9 +197,5 @@ public class Pipeline {
         public String getCalendar() {
             return calendar;
         }
-    }
-
-    static class Flow {
-
     }
 }

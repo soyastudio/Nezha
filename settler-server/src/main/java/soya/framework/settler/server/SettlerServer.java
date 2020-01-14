@@ -31,6 +31,11 @@ public class SettlerServer extends Server {
     }
 
     @Override
+    public String getEnvironmentProperty(String key) {
+        return applicationContext.getEnvironment().getProperty(key);
+    }
+
+    @Override
     public <T> T getService(Class<T> type) {
         return applicationContext.getBean(type);
     }

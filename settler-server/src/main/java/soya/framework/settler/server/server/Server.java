@@ -8,7 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public abstract class Server {
+public abstract class Server implements ExternalContext{
 
     private static Server instance;
 
@@ -87,8 +87,6 @@ public abstract class Server {
     public File getHome() {
         return home;
     }
-
-    public abstract <T> T getService(Class<T> type);
 
     public void publish(ServiceEvent event) {
         eventBus.post(event);
