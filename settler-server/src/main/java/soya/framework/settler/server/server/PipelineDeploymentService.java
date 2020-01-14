@@ -25,7 +25,7 @@ public class PipelineDeploymentService implements ServiceEventListener<PipelineD
 
     @PostConstruct
     void init() {
-        File home = Server.getInstance().getHome();
+        File home = PipelineServer.getInstance().getHome();
         pipelineHome = new File(home, "pipeline");
         if (!pipelineHome.exists()) {
             pipelineHome.mkdirs();
@@ -113,7 +113,7 @@ public class PipelineDeploymentService implements ServiceEventListener<PipelineD
 
         @Override
         public void run() {
-            Server.getInstance().publish(PipelineLogEvent.builder(deployment.getName(), PipelineLogEvent.EventType.CREATE).create());
+            PipelineServer.getInstance().publish(PipelineLogEvent.builder(deployment.getName(), PipelineLogEvent.EventType.CREATE).create());
             deployer.start(deployment);
         }
     }
@@ -129,7 +129,7 @@ public class PipelineDeploymentService implements ServiceEventListener<PipelineD
         public void run() {
             File[] files = base.listFiles();
             for (File file : files) {
-                Server.getInstance().publish(new PipelineDeploymentEvent(file));
+                PipelineServer.getInstance().publish(new PipelineDeploymentEvent(file));
             }
         }
     }

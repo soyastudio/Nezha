@@ -13,7 +13,7 @@ import org.springframework.context.event.EventListener;
 import soya.framework.settler.server.server.*;
 
 @SpringBootApplication(scanBasePackages = {"soya.framework.settler.server"})
-public class SettlerServer extends Server {
+public class SettlerServer extends PipelineServer {
     private static final Logger logger = LoggerFactory.getLogger(SettlerServer.class);
 
     private ApplicationContext applicationContext;

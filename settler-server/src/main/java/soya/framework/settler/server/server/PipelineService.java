@@ -12,6 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,6 +73,7 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
 
             } catch (Exception e) {
                 // TODO:
+                throw new RuntimeException(e);
             }
 
         } else if (event instanceof PipelineTriggerEvent) {
@@ -121,7 +123,7 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
     }
 
     protected void ack(Pipeline pipeline) {
-        Server.getInstance().publish(new PipelineAckEvent(pipeline.getName()));
+        PipelineServer.getInstance().publish(new PipelineAckEvent(pipeline.getName()));
     }
 
     static class PipelineJob implements Job {
@@ -129,7 +131,7 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
         @Override
         public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
             String pipeline = jobExecutionContext.getJobDetail().getKey().getName();
-            Server.getInstance().publish(new PipelineTriggerEvent(pipeline));
+            PipelineServer.getInstance().publish(new PipelineTriggerEvent(pipeline));
         }
     }
 
@@ -147,7 +149,7 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
             while (iterator.hasNext()) {
                 PipelineEvent event = iterator.next();
                 if (System.currentTimeMillis() - event.getCreatedTime() > event.getTimeout()) {
-                    Server.getInstance().publish(new PipelineAckEvent(event.getPipeline()));
+                    PipelineServer.getInstance().publish(new PipelineAckEvent(event.getPipeline()));
                 }
             }
         }
@@ -156,11 +158,18 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
     static class DefaultPipelineFactory implements PipelineFactory {
 
         @Override
-        public Pipeline create(File base) throws IOException {
-            Pipeline.Builder builder = Pipeline.builder(base);
-
+        public Pipeline create(File base) throws PipelineCreateException {
             File pipelineYaml = new File(base, "pipeline.yaml");
-            Map<String, Object> configuration = new Yaml().load(new FileInputStream(pipelineYaml));
+            Map<String, Object> configuration = null;
+            try {
+                configuration = new Yaml().load(new FileInputStream(pipelineYaml));
+
+            } catch (FileNotFoundException e) {
+                throw new PipelineCreateException(e);
+
+            }
+
+            Pipeline.Builder builder = Pipeline.builder(base);
             configuration.entrySet().forEach(e -> {
                 String key = e.getKey();
                 switch (key) {
@@ -197,7 +206,9 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             System.out.println(gson.toJson(pipeline.getConfiguration()));
 
-            pipeline.init(Server.getInstance());
+            pipeline.init(PipelineServer.getInstance());
+
+
 
             return pipeline;
         }

@@ -8,16 +8,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public abstract class Server implements ExternalContext{
+public abstract class PipelineServer implements ExternalContext{
 
-    private static Server instance;
+    private static PipelineServer instance;
 
     private String serverName;
     private File home;
 
     private EventBus eventBus;
 
-    protected Server() {
+    protected PipelineServer() {
         try {
             init();
             instance = this;
@@ -27,7 +27,7 @@ public abstract class Server implements ExternalContext{
         }
     }
 
-    public static Server getInstance() {
+    public static PipelineServer getInstance() {
         return instance;
     }
 

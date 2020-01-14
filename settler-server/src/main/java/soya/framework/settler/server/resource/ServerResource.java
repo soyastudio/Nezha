@@ -8,13 +8,12 @@ import soya.framework.settler.EvaluateFunction;
 import soya.framework.settler.server.server.PipelineDeploymentService;
 import soya.framework.settler.server.server.PipelineLogService;
 import soya.framework.settler.server.server.PipelineTriggerEvent;
-import soya.framework.settler.server.server.Server;
+import soya.framework.settler.server.server.PipelineServer;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.List;
 
 @Component
 @Path("/console")
@@ -43,7 +42,7 @@ public class ServerResource {
     @Path("/deployments")
     @Produces({MediaType.APPLICATION_JSON})
     public Response deployments() {
-        PipelineDeploymentService service = Server.getInstance().getService(PipelineDeploymentService.class);
+        PipelineDeploymentService service = PipelineServer.getInstance().getService(PipelineDeploymentService.class);
         return Response.status(200).entity(service.getDeployments()).build();
     }
 
@@ -51,7 +50,7 @@ public class ServerResource {
     @Path("/deployment/{pipeline}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response deployment(@PathParam("pipeline") String pipeline) {
-        PipelineDeploymentService service = Server.getInstance().getService(PipelineDeploymentService.class);
+        PipelineDeploymentService service = PipelineServer.getInstance().getService(PipelineDeploymentService.class);
         return Response.status(200).entity(service.getDeployments()).build();
     }
 
@@ -61,7 +60,7 @@ public class ServerResource {
     @Path("/pipeline/{pipeline}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response trigger(@PathParam("pipeline") String pipeline) {
-        Server.getInstance().publish(new PipelineTriggerEvent(pipeline));
+        PipelineServer.getInstance().publish(new PipelineTriggerEvent(pipeline));
         return Response.status(200).build();
     }
 
@@ -70,7 +69,7 @@ public class ServerResource {
     @Produces({MediaType.TEXT_PLAIN})
     public Response log(@PathParam("pipeline") String pipeline, @QueryParam("offset") int offset,
                         @QueryParam("limit") int limit, @QueryParam("reverse") boolean reverse, @QueryParam("indexed") boolean indexed) {
-        PipelineLogService service = Server.getInstance().getService(PipelineLogService.class);
+        PipelineLogService service = PipelineServer.getInstance().getService(PipelineLogService.class);
         try {
             return Response.status(200).entity(service.read(pipeline, offset, limit, reverse, indexed)).build();
         } catch (IOException e) {

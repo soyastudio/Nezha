@@ -65,7 +65,7 @@ public class PipelineLogService implements ServiceEventListener<PipelineLogEvent
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
-                    Server.getInstance().publish(ServiceExceptionEvent.newInstance(e));
+                    PipelineServer.getInstance().publish(ServiceExceptionEvent.newInstance(e));
                 }
             }).run();
         }
