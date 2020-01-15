@@ -3,8 +3,8 @@ package soya.framework.settler.server.resource;
 import com.google.gson.Gson;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Component;
-import soya.framework.settler.EvaluateEngine;
-import soya.framework.settler.EvaluateFunction;
+import soya.framework.settler.WorkflowEngine;
+import soya.framework.settler.FunctionNode;
 import soya.framework.settler.server.server.PipelineDeploymentService;
 import soya.framework.settler.server.server.PipelineLogService;
 import soya.framework.settler.server.server.PipelineTriggerEvent;
@@ -25,7 +25,7 @@ public class ServerResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response ast(String expression) {
         Gson gson = new Gson();
-        EvaluateFunction[] functions = EvaluateFunction.toFunctions(expression);
+        FunctionNode[] functions = FunctionNode.toFunctions(expression);
         return Response.status(200).entity(gson.toJson(functions)).build();
     }
 
@@ -34,7 +34,7 @@ public class ServerResource {
     @Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response evaluate(@HeaderParam("expression") String expression, String json) {
-        EvaluateEngine engine = EvaluateEngine.getInstance();
+        WorkflowEngine engine = WorkflowEngine.getInstance();
         return Response.status(200).entity(engine.evaluate(json, expression)).build();
     }
 

@@ -7,11 +7,11 @@ import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import soya.framework.settler.*;
 import soya.framework.settler.evaluators.AbstractEvaluatorBuilder;
 
-@EvaluatorDef(name="json_path", arguments = "jsonPath")
+@Component(name="json_path", arguments = "jsonPath")
 public class JsonPathBuilder extends AbstractEvaluatorBuilder<JsonPathBuilder.JsonPathEvaluator> {
 
     @Override
-    public JsonPathEvaluator build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public JsonPathEvaluator build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         if(arguments.length != 1) {
             throw new IllegalFunctionArgumentException();
         }

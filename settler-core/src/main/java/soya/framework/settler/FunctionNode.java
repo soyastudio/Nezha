@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public final class EvaluateFunction implements EvaluateTreeNode {
-    private final EvaluateTreeNodeType type = EvaluateTreeNodeType.FUNCTION;
+public final class FunctionNode implements ProcessNode {
+    private final ProcessNodeType type = ProcessNodeType.FUNCTION;
     private final String name;
-    private final EvaluateTreeNode[] arguments;
+    private final ProcessNode[] arguments;
 
-    private EvaluateFunction(String name, EvaluateTreeNode[] arguments) {
+    private FunctionNode(String name, ProcessNode[] arguments) {
         this.name = name;
         this.arguments = arguments;
     }
 
     @Override
-    public EvaluateTreeNodeType getType() {
+    public ProcessNodeType getType() {
         return type;
     }
 
@@ -23,13 +23,13 @@ public final class EvaluateFunction implements EvaluateTreeNode {
         return name;
     }
 
-    public EvaluateTreeNode[] getArguments() {
+    public ProcessNode[] getArguments() {
         return arguments;
     }
 
-    public static EvaluateFunction[] toFunctions(String expression) {
+    public static FunctionNode[] toFunctions(String expression) {
         String exp = expression.trim();
-        List<EvaluateFunction> list = new ArrayList();
+        List<FunctionNode> list = new ArrayList();
         Stack<Character> stack = new Stack<>();
         StringBuilder builder = new StringBuilder();
         for (char c : exp.toCharArray()) {
@@ -61,25 +61,25 @@ public final class EvaluateFunction implements EvaluateTreeNode {
             list.add(toFunction(builder.toString().trim()));
         }
 
-        return list.toArray(new EvaluateFunction[list.size()]);
+        return list.toArray(new FunctionNode[list.size()]);
     }
 
-    public static EvaluateFunction toFunction(String expression) {
+    public static FunctionNode toFunction(String expression) {
         String exp = expression.trim();
         int start = exp.indexOf('(');
         int end = exp.lastIndexOf(')');
         String func = exp.substring(0, start);
         String params = exp.substring(start + 1, end);
-        return new EvaluateFunction(func, toArray(params));
+        return new FunctionNode(func, toArray(params));
     }
 
-    private static EvaluateTreeNode[] toArray(String params) {
+    private static ProcessNode[] toArray(String params) {
         if (params == null || params.trim().length() == 0) {
-            return new EvaluateTreeNode[0];
+            return new ProcessNode[0];
         }
 
         String exp = params.trim();
-        List<EvaluateTreeNode> list = new ArrayList();
+        List<ProcessNode> list = new ArrayList();
         Stack<Character> stack = new Stack<>();
         StringBuilder builder = new StringBuilder();
         for (char c : exp.toCharArray()) {
@@ -120,18 +120,18 @@ public final class EvaluateFunction implements EvaluateTreeNode {
             list.add(toNode(builder.toString().trim()));
         }
 
-        return list.toArray(new EvaluateTreeNode[list.size()]);
+        return list.toArray(new ProcessNode[list.size()]);
     }
 
-    private static EvaluateTreeNode toNode(String exp) {
-        EvaluateTreeNode node;
+    private static ProcessNode toNode(String exp) {
+        ProcessNode node;
         if(exp.startsWith("(") && exp.endsWith(")")) {
             node = toFunction("INNER" + exp);
 
         } else if (exp.startsWith("[") && exp.endsWith("]")) {
             String s = exp.substring(1, exp.length() - 1);
-            EvaluateTreeNode[] nodes = toArray(s);
-            node = new EvaluateArray(nodes);
+            ProcessNode[] nodes = toArray(s);
+            node = new FunctionChainNode(nodes);
 
         } else if (!exp.contains("(")) {
             node = new EvaluateParameter(exp);

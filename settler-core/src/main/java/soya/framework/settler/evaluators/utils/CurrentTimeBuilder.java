@@ -5,11 +5,11 @@ import soya.framework.settler.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@EvaluatorDef(name="current_time", arguments = "format")
+@Component(name="current_time", arguments = "format")
 public class CurrentTimeBuilder implements EvaluatorBuilder<CurrentTimeBuilder.CurrentTime> {
 
     @Override
-    public CurrentTime build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public CurrentTime build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         CurrentTime evaluator = new CurrentTime();
         if(arguments.length > 0) {
             EvaluateParameter param = (EvaluateParameter) arguments[0];

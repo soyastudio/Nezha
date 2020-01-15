@@ -1,5 +1,6 @@
 package soya.framework.settler;
 
-public interface Evaluator {
+@ComponentType()
+public interface Evaluator extends Processor {
     String evaluate(String data) throws EvaluateException;
 }

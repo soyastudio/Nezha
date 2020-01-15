@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.zip.GZIPOutputStream;
 
-@EvaluatorDef(name = "encode_base64")
+@Component(name = "encode_base64")
 public class Base64EncodeBuilder implements EvaluatorBuilder<Base64EncodeBuilder.Base64Encode> {
 
     @Override
-    public Base64Encode build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public Base64Encode build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         Base64Encode evaluator = new Base64Encode();
         if (arguments.length > 0) {
             EvaluateParameter parameter = (EvaluateParameter) arguments[0];

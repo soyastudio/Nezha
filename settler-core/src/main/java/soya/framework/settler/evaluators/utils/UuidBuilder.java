@@ -4,11 +4,11 @@ import soya.framework.settler.*;
 
 import java.util.UUID;
 
-@EvaluatorDef(name="uuid", arguments = "format")
+@Component(name="uuid", arguments = "format")
 public class UuidBuilder implements EvaluatorBuilder<UuidBuilder.Uuid> {
 
     @Override
-    public Uuid build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public Uuid build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         Uuid uuid = new Uuid();
         return uuid;
     }

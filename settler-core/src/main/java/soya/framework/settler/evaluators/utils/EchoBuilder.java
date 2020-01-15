@@ -2,11 +2,11 @@ package soya.framework.settler.evaluators.utils;
 
 import soya.framework.settler.*;
 
-@EvaluatorDef(name = "echo")
+@Component(name = "echo")
 public class EchoBuilder implements EvaluatorBuilder<EchoBuilder.Echo> {
 
     @Override
-    public Echo build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public Echo build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         Echo echo = new Echo();
         return echo;
     }

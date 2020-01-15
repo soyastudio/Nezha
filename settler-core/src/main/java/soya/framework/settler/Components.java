@@ -6,25 +6,27 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Evaluators {
-    private static ImmutableMap<String, EvaluatorBuilder> builders;
+public class Components {
+
+    private static ImmutableMap<String, ProcessorBuilder> builders;
 
     protected static void register(String... packageName) {
-        Map<String, EvaluatorBuilder> map = new HashMap<>();
+        Map<String, ProcessorBuilder> map = new HashMap<>();
         if (builders != null) {
             map.putAll(builders);
         }
 
         Set<Class<?>> set = findByAnnotation(packageName);
         set.forEach(e -> {
-            EvaluatorDef def = e.getAnnotation(EvaluatorDef.class);
+            Component def = e.getAnnotation(Component.class);
             String name = def.name();
-            EvaluatorBuilder builder = newInstance(e);
+            ProcessorBuilder builder = newInstance(e);
             map.put(name, builder);
 
         });
@@ -32,20 +34,30 @@ public class Evaluators {
         builders = ImmutableMap.copyOf(map);
     }
 
-    public static Evaluator create(EvaluateFunction function, EvaluationContext context) {
+    public static Method getProcessMethod(Class<? extends Processor> type) {
+        Class<?>[] interfaces = type.getInterfaces();
+        for(Class<?> intf: interfaces) {
+            if(intf.getAnnotation(ComponentType.class) != null) {
+                return intf.getMethods()[0];
+            }
+        }
+        return null;
+    }
+
+    public static Processor create(FunctionNode function, ProcessContext context) {
         return builders.get(function.getName()).build(function.getArguments(), context);
     }
 
-    public static String toJson(EvaluateTreeNode... nodes) {
+    public static String toJson(ProcessNode... nodes) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(nodes);
     }
 
-    private static EvaluatorBuilder newInstance(Class<?> clazz) throws EvaluatorBuildException {
+    private static ProcessorBuilder newInstance(Class<?> clazz) throws ProcessorBuildException {
         try {
-            return (EvaluatorBuilder) clazz.newInstance();
+            return (ProcessorBuilder) clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new EvaluatorBuildException(e);
+            throw new ProcessorBuildException(e);
         }
     }
 
@@ -57,7 +69,7 @@ public class Evaluators {
                 Set<ClassPath.ClassInfo> results = classpath.getTopLevelClassesRecursive(pkg);
                 results.forEach(e -> {
                     Class<?> cls = e.load();
-                    if (cls.getAnnotation(EvaluatorDef.class) != null) {
+                    if (cls.getAnnotation(Component.class) != null) {
                         set.add(cls);
                     }
                 });
@@ -73,7 +85,7 @@ public class Evaluators {
     private static ClassLoader getClassLoader() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
-            classLoader = Evaluators.class.getClassLoader();
+            classLoader = Components.class.getClassLoader();
         }
 
         return classLoader;

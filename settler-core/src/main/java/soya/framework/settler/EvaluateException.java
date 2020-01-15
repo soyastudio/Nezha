@@ -1,6 +1,6 @@
 package soya.framework.settler;
 
-public class EvaluateException extends RuntimeException {
+public class EvaluateException extends ProcessException {
     public EvaluateException() {
     }
 

@@ -2,11 +2,11 @@ package soya.framework.settler.evaluators.utils;
 
 import soya.framework.settler.*;
 
-@EvaluatorDef(name = "sub_string")
+@Component(name = "sub_string")
 public class SubStringBuilder implements EvaluatorBuilder<SubStringBuilder.SubString> {
 
     @Override
-    public SubString build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public SubString build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         SubString subString = new SubString();
         if (arguments.length == 1) {
             EvaluateParameter parameter = (EvaluateParameter) arguments[0];

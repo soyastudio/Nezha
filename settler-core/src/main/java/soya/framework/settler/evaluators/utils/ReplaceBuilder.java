@@ -2,10 +2,10 @@ package soya.framework.settler.evaluators.utils;
 
 import soya.framework.settler.*;
 
-@EvaluatorDef(name = "replace")
+@Component(name = "replace")
 public class ReplaceBuilder implements EvaluatorBuilder<ReplaceBuilder.Replace> {
     @Override
-    public Replace build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public Replace build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         Replace replace = new Replace();
         // TODO
         return replace;

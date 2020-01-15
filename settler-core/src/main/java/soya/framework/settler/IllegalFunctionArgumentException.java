@@ -1,6 +1,6 @@
 package soya.framework.settler;
 
-public class IllegalFunctionArgumentException extends EvaluatorBuildException {
+public class IllegalFunctionArgumentException extends ProcessorBuildException {
     public IllegalFunctionArgumentException() {
     }
 

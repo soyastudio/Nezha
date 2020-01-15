@@ -1,5 +1,5 @@
 package soya.framework.settler;
 
-public enum EvaluateTreeNodeType {
+public enum ProcessNodeType {
     ASSIGNMENT, FUNCTION, INNER_FUNCTION, ARRAY
 }

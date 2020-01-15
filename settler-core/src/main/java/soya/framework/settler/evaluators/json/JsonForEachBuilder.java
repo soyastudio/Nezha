@@ -5,14 +5,14 @@ import com.google.gson.JsonElement;
 import soya.framework.settler.*;
 import soya.framework.settler.evaluators.AbstractEvaluatorBuilder;
 
-@EvaluatorDef(name = "json_foreach")
+@Component(name = "json_foreach")
 public final class JsonForEachBuilder extends AbstractEvaluatorBuilder<JsonForEachBuilder.JsonForEach> {
 
     @Override
-    public JsonForEach build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public JsonForEach build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         JsonForEach eval = new JsonForEach();
-        EvaluateFunction function = (EvaluateFunction) arguments[0];
-        eval.evaluator = (JsonElementEvaluator) EvaluateEngine.getInstance().create(function, context);
+        FunctionNode function = (FunctionNode) arguments[0];
+        eval.evaluator = (JsonElementEvaluator) WorkflowEngine.getInstance().create(function, context);
         return eval;
     }
 

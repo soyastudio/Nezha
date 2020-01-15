@@ -7,7 +7,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface EvaluatorDef {
-    String name();
-    String[] arguments() default {};
+public @interface ComponentType {
 }

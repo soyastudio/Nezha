@@ -3,11 +3,11 @@ package soya.framework.settler.evaluators.flow;
 import soya.framework.settler.*;
 import soya.framework.settler.evaluators.AbstractEvaluatorBuilder;
 
-@EvaluatorDef(name = "chain")
+@Component(name = "chain")
 public class EvaluateChainBuilder extends AbstractEvaluatorBuilder<EvaluateChainBuilder.EvaluateChain> {
 
     @Override
-    public EvaluateChain build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public EvaluateChain build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         return null;
     }
 

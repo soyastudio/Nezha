@@ -2,10 +2,10 @@ package soya.framework.settler.evaluators.utils;
 
 import soya.framework.settler.*;
 
-@EvaluatorDef(name = "random_number")
+@Component(name = "random_number")
 public class RandomNumberBuilder implements EvaluatorBuilder<RandomNumberBuilder.RandomNumber> {
     @Override
-    public RandomNumber build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public RandomNumber build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         RandomNumber randomNumber = new RandomNumber();
         // TODO:
         return randomNumber;

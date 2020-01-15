@@ -6,19 +6,19 @@ import soya.framework.settler.evaluators.AbstractEvaluatorBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-@EvaluatorDef(name = "json_shifter")
+@Component(name = "json_shifter")
 public class JsonShifterBuilder extends AbstractEvaluatorBuilder<JsonShifter> {
 
     @Override
-    public JsonShifter build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public JsonShifter build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         JsonShifter evaluator = new JsonShifter();
 
         List<JsonShifter.Shifter> shifters = new ArrayList<>();
-        if(arguments.length == 1 && (arguments[0] instanceof EvaluateArray)) {
+        if(arguments.length == 1 && (arguments[0] instanceof FunctionChainNode)) {
 
         } else {
-            for(EvaluateTreeNode node: arguments) {
-                EvaluateFunction func = (EvaluateFunction) node;
+            for(ProcessNode node: arguments) {
+                FunctionNode func = (FunctionNode) node;
                 shifters.add(create(func, context));
             }
         }
@@ -28,10 +28,10 @@ public class JsonShifterBuilder extends AbstractEvaluatorBuilder<JsonShifter> {
         return evaluator;
     }
 
-    private JsonShifter.Shifter create(EvaluateFunction func, EvaluationContext context) {
+    private JsonShifter.Shifter create(FunctionNode func, ProcessContext context) {
         JsonShifter.Shifter sh = new JsonShifter.Shifter();
 
-        for(EvaluateTreeNode arg: func.getArguments()) {
+        for(ProcessNode arg: func.getArguments()) {
             if(sh.to == null) {
                 sh.to = ((EvaluateParameter) arg).getStringValue(context);
             } else if(sh.from == null) {

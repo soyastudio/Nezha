@@ -13,7 +13,7 @@ public abstract class AbstractEvaluatorBuilder<T extends Evaluator> implements E
 
     public AbstractEvaluatorBuilder() {
         clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        EvaluatorDef def = getClass().getAnnotation(EvaluatorDef.class);
+        Component def = getClass().getAnnotation(Component.class);
         this.properties = def.arguments();
     }
 
@@ -34,15 +34,15 @@ public abstract class AbstractEvaluatorBuilder<T extends Evaluator> implements E
         return null;
     }
 
-    public T create(String[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public T create(String[] arguments, ProcessContext context) throws ProcessorBuildException {
         try {
             return gson.fromJson(toJsonObject(clazz, properties, arguments, context), clazz);
         } catch (NoSuchFieldException e) {
-            throw new EvaluatorBuildException(e);
+            throw new ProcessorBuildException(e);
         }
     }
 
-    protected JsonObject toJsonObject(Class<?> clazz, String[] properties, String[] arguments, EvaluationContext context) throws NoSuchFieldException {
+    protected JsonObject toJsonObject(Class<?> clazz, String[] properties, String[] arguments, ProcessContext context) throws NoSuchFieldException {
         JsonObject json = new JsonObject();
         int len = arguments.length;
         for (int i = 0; i < properties.length; i++) {

@@ -2,18 +2,18 @@ package soya.framework.settler.evaluators.flow;
 
 import soya.framework.settler.*;
 
-@EvaluatorDef(name = "repeat")
+@Component(name = "repeat")
 public class RepeatBuilder implements EvaluatorBuilder<RepeatBuilder.Repeat> {
 
     @Override
-    public Repeat build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public Repeat build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         Repeat repeat = new Repeat();
         if(arguments[0] instanceof EvaluateParameter) {
             repeat.count = EvaluateParameter.intValue(arguments[0], context);
         }
 
         if(arguments.length > 1) {
-            repeat.executor = Evaluators.create((EvaluateFunction)arguments[1], context);
+            repeat.executor = (Evaluator) Components.create((FunctionNode)arguments[1], context);
         }
 
         return repeat;

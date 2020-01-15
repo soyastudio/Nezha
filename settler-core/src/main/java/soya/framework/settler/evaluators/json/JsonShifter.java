@@ -25,7 +25,7 @@ public class JsonShifter extends JsonElementEvaluator {
     static class Shifter extends JsonElementEvaluator {
 
         String to;
-        EvaluateTreeNode from;
+        ProcessNode from;
 
         @Override
         public JsonElement evaluate(JsonElement jsonElement) throws EvaluateException {
@@ -37,9 +37,9 @@ public class JsonShifter extends JsonElementEvaluator {
                 String propName = ((EvaluateParameter) from).getValue();
                 return jsonElement.getAsJsonObject().get(propName);
 
-            } else if(from instanceof EvaluateFunction) {
-                EvaluateFunction fun = (EvaluateFunction) from;
-                Evaluator evaluator = Evaluators.create(fun, null);
+            } else if(from instanceof FunctionNode) {
+                FunctionNode fun = (FunctionNode) from;
+                Evaluator evaluator = (Evaluator) Components.create(fun, null);
                 String st = evaluator.evaluate(jsonElement.toString());
                 return new JsonPrimitive(st);
             }

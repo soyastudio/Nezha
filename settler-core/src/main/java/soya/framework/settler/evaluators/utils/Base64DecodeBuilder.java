@@ -9,10 +9,10 @@ import java.io.InputStreamReader;
 import java.util.Base64;
 import java.util.zip.GZIPInputStream;
 
-@EvaluatorDef(name = "decode_base64")
+@Component(name = "decode_base64")
 public class Base64DecodeBuilder implements EvaluatorBuilder<Base64DecodeBuilder.Base64Decode> {
     @Override
-    public Base64Decode build(EvaluateTreeNode[] arguments, EvaluationContext context) throws EvaluatorBuildException {
+    public Base64Decode build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
         Base64Decode decode = new Base64Decode();
         if (arguments.length > 0) {
             EvaluateParameter parameter = (EvaluateParameter) arguments[0];

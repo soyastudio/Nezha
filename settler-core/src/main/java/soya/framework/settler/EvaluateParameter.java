@@ -1,7 +1,7 @@
 package soya.framework.settler;
 
-public final class EvaluateParameter implements EvaluateTreeNode {
-    private final EvaluateTreeNodeType type = EvaluateTreeNodeType.ASSIGNMENT;
+public final class EvaluateParameter implements ProcessNode {
+    private final ProcessNodeType type = ProcessNodeType.ASSIGNMENT;
     private final String value;
 
     protected EvaluateParameter(String value) {
@@ -9,7 +9,7 @@ public final class EvaluateParameter implements EvaluateTreeNode {
     }
 
     @Override
-    public EvaluateTreeNodeType getType() {
+    public ProcessNodeType getType() {
         return type;
     }
 
@@ -17,19 +17,19 @@ public final class EvaluateParameter implements EvaluateTreeNode {
         return value;
     }
 
-    public String getStringValue(EvaluationContext context) {
+    public String getStringValue(ProcessContext context) {
         return value;
     }
 
-    public boolean getBoolean(EvaluationContext context) {
+    public boolean getBoolean(ProcessContext context) {
         return Boolean.parseBoolean(getStringValue(context));
     }
 
-    public int getInteger(EvaluationContext context) {
+    public int getInteger(ProcessContext context) {
         return Integer.parseInt(getStringValue(context));
     }
 
-    public static int intValue(EvaluateTreeNode node, EvaluationContext context) {
+    public static int intValue(ProcessNode node, ProcessContext context) {
         return ((EvaluateParameter)node).getInteger(context);
     }
 }
