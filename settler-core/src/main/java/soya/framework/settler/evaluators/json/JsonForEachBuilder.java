@@ -6,13 +6,13 @@ import soya.framework.settler.*;
 import soya.framework.settler.evaluators.AbstractEvaluatorBuilder;
 
 @Component(name = "json_foreach")
-public final class JsonForEachBuilder extends AbstractEvaluatorBuilder<JsonForEachBuilder.JsonForEach> {
+public final class JsonForEachBuilder implements EvaluatorBuilder<JsonForEachBuilder.JsonForEach> {
 
     @Override
-    public JsonForEach build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public JsonForEach build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         JsonForEach eval = new JsonForEach();
         FunctionNode function = (FunctionNode) arguments[0];
-        eval.evaluator = (JsonElementEvaluator) WorkflowEngine.getInstance().create(function, context);
+        eval.evaluator = (JsonElementEvaluator) WorkflowEngine.getInstance().create(function, session);
         return eval;
     }
 

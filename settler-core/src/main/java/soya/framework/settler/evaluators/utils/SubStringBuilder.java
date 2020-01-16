@@ -6,17 +6,17 @@ import soya.framework.settler.*;
 public class SubStringBuilder implements EvaluatorBuilder<SubStringBuilder.SubString> {
 
     @Override
-    public SubString build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public SubString build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         SubString subString = new SubString();
         if (arguments.length == 1) {
-            EvaluateParameter parameter = (EvaluateParameter) arguments[0];
-            subString.end = parameter.getInteger(context);
+            AssignmentNode parameter = (AssignmentNode) arguments[0];
+            subString.end = parameter.getInteger(session.getContext());
 
         } else if (arguments.length == 2) {
-            EvaluateParameter p0 = (EvaluateParameter) arguments[0];
-            EvaluateParameter p1 = (EvaluateParameter) arguments[1];
-            subString.start = p0.getInteger(context);
-            subString.end = p1.getInteger(context);
+            AssignmentNode p0 = (AssignmentNode) arguments[0];
+            AssignmentNode p1 = (AssignmentNode) arguments[1];
+            subString.start = p0.getInteger(session.getContext());
+            subString.end = p1.getInteger(session.getContext());
 
         } else {
             throw new IllegalFunctionArgumentException();

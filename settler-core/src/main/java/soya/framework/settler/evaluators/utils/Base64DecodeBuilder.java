@@ -12,17 +12,18 @@ import java.util.zip.GZIPInputStream;
 @Component(name = "decode_base64")
 public class Base64DecodeBuilder implements EvaluatorBuilder<Base64DecodeBuilder.Base64Decode> {
     @Override
-    public Base64Decode build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public Base64Decode build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         Base64Decode decode = new Base64Decode();
         if (arguments.length > 0) {
-            EvaluateParameter parameter = (EvaluateParameter) arguments[0];
-            decode.decompress = parameter.getBoolean(context);
+            AssignmentNode parameter = (AssignmentNode) arguments[0];
+            decode.decompress = parameter.getBoolean(session.getContext());
         }
         return decode;
     }
 
     static class Base64Decode implements Evaluator {
         private boolean decompress;
+
         private Base64Decode() {
         }
 

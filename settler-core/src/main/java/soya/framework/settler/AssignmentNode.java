@@ -1,10 +1,10 @@
 package soya.framework.settler;
 
-public final class EvaluateParameter implements ProcessNode {
+public final class AssignmentNode implements ProcessNode {
     private final ProcessNodeType type = ProcessNodeType.ASSIGNMENT;
     private final String value;
 
-    protected EvaluateParameter(String value) {
+    protected AssignmentNode(String value) {
         this.value = value;
     }
 
@@ -30,6 +30,6 @@ public final class EvaluateParameter implements ProcessNode {
     }
 
     public static int intValue(ProcessNode node, ProcessContext context) {
-        return ((EvaluateParameter)node).getInteger(context);
+        return ((AssignmentNode)node).getInteger(context);
     }
 }

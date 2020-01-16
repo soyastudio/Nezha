@@ -11,11 +11,11 @@ import java.util.zip.GZIPOutputStream;
 public class Base64EncodeBuilder implements EvaluatorBuilder<Base64EncodeBuilder.Base64Encode> {
 
     @Override
-    public Base64Encode build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public Base64Encode build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         Base64Encode evaluator = new Base64Encode();
         if (arguments.length > 0) {
-            EvaluateParameter parameter = (EvaluateParameter) arguments[0];
-            evaluator.compress = parameter.getBoolean(context);
+            AssignmentNode parameter = (AssignmentNode) arguments[0];
+            evaluator.compress = parameter.getBoolean(session.getContext());
         }
         return evaluator;
     }

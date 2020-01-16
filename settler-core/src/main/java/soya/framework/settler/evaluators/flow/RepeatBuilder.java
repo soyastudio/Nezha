@@ -6,14 +6,14 @@ import soya.framework.settler.*;
 public class RepeatBuilder implements EvaluatorBuilder<RepeatBuilder.Repeat> {
 
     @Override
-    public Repeat build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public Repeat build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         Repeat repeat = new Repeat();
-        if(arguments[0] instanceof EvaluateParameter) {
-            repeat.count = EvaluateParameter.intValue(arguments[0], context);
+        if (arguments[0] instanceof AssignmentNode) {
+            repeat.count = AssignmentNode.intValue(arguments[0], session.getContext());
         }
 
-        if(arguments.length > 1) {
-            repeat.executor = (Evaluator) Components.create((FunctionNode)arguments[1], context);
+        if (arguments.length > 1) {
+            repeat.executor = (Evaluator) Components.create((FunctionNode) arguments[1], session);
         }
 
         return repeat;
@@ -29,9 +29,9 @@ public class RepeatBuilder implements EvaluatorBuilder<RepeatBuilder.Repeat> {
         @Override
         public String evaluate(String data) throws EvaluateException {
             int index = 0;
-            while(index < count) {
+            while (index < count) {
                 executor.evaluate(data);
-                index ++;
+                index++;
             }
 
             return null;

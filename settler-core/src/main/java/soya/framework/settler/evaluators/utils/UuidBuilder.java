@@ -8,7 +8,7 @@ import java.util.UUID;
 public class UuidBuilder implements EvaluatorBuilder<UuidBuilder.Uuid> {
 
     @Override
-    public Uuid build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public Uuid build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         Uuid uuid = new Uuid();
         return uuid;
     }

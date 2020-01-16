@@ -5,7 +5,7 @@ import soya.framework.settler.*;
 @Component(name = "random_number")
 public class RandomNumberBuilder implements EvaluatorBuilder<RandomNumberBuilder.RandomNumber> {
     @Override
-    public RandomNumber build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public RandomNumber build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         RandomNumber randomNumber = new RandomNumber();
         // TODO:
         return randomNumber;

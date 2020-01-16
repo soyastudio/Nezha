@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public final class FunctionNode implements ProcessNode {
+public final class FunctionNode implements ExecutableNode {
     private final ProcessNodeType type = ProcessNodeType.FUNCTION;
     private final String name;
     private final ProcessNode[] arguments;
@@ -125,16 +125,16 @@ public final class FunctionNode implements ProcessNode {
 
     private static ProcessNode toNode(String exp) {
         ProcessNode node;
-        if(exp.startsWith("(") && exp.endsWith(")")) {
+        if (exp.startsWith("(") && exp.endsWith(")")) {
             node = toFunction("INNER" + exp);
 
         } else if (exp.startsWith("[") && exp.endsWith("]")) {
             String s = exp.substring(1, exp.length() - 1);
             ProcessNode[] nodes = toArray(s);
-            node = new FunctionChainNode(nodes);
+            node = new ArrayNode(nodes);
 
         } else if (!exp.contains("(")) {
-            node = new EvaluateParameter(exp);
+            node = new AssignmentNode(exp);
 
         } else {
             // Function:

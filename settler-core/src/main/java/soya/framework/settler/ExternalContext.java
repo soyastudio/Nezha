@@ -1,4 +1,4 @@
-package soya.framework.settler.server.server;
+package soya.framework.settler;
 
 public interface ExternalContext {
     String getEnvironmentProperty(String key);

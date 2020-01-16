@@ -33,8 +33,8 @@ public class JsonShifter extends JsonElementEvaluator {
                 return jsonElement;
             }
 
-            if (from instanceof EvaluateParameter) {
-                String propName = ((EvaluateParameter) from).getValue();
+            if (from instanceof AssignmentNode) {
+                String propName = ((AssignmentNode) from).getValue();
                 return jsonElement.getAsJsonObject().get(propName);
 
             } else if(from instanceof FunctionNode) {

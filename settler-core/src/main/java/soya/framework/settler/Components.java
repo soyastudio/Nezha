@@ -44,8 +44,8 @@ public class Components {
         return null;
     }
 
-    public static Processor create(FunctionNode function, ProcessContext context) {
-        return builders.get(function.getName()).build(function.getArguments(), context);
+    public static Processor create(FunctionNode function, ProcessSession session) {
+        return builders.get(function.getName()).build(function.getArguments(), session);
     }
 
     public static String toJson(ProcessNode... nodes) {

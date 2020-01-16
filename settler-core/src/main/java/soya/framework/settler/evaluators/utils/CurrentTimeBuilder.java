@@ -9,11 +9,11 @@ import java.util.Date;
 public class CurrentTimeBuilder implements EvaluatorBuilder<CurrentTimeBuilder.CurrentTime> {
 
     @Override
-    public CurrentTime build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public CurrentTime build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         CurrentTime evaluator = new CurrentTime();
         if(arguments.length > 0) {
-            EvaluateParameter param = (EvaluateParameter) arguments[0];
-            evaluator.format = param.getStringValue(context);
+            AssignmentNode param = (AssignmentNode) arguments[0];
+            evaluator.format = param.getStringValue(session.getContext());
         }
         return evaluator;
     }

@@ -4,10 +4,10 @@ import soya.framework.settler.*;
 import soya.framework.settler.evaluators.AbstractEvaluatorBuilder;
 
 @Component(name="current_timestamp", arguments = "format")
-public final class CurrentTimestampBuilder extends AbstractEvaluatorBuilder<CurrentTimestampBuilder.CurrentTimestamp> {
+public final class CurrentTimestampBuilder implements EvaluatorBuilder<CurrentTimestampBuilder.CurrentTimestamp> {
 
     @Override
-    public CurrentTimestamp build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public CurrentTimestamp build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         CurrentTimestamp evaluator = new CurrentTimestamp();
         return evaluator;
     }

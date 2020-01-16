@@ -29,15 +29,6 @@ public class ServerResource {
         return Response.status(200).entity(gson.toJson(functions)).build();
     }
 
-    @POST
-    @Path("/evaluate")
-    @Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Produces({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response evaluate(@HeaderParam("expression") String expression, String json) {
-        WorkflowEngine engine = WorkflowEngine.getInstance();
-        return Response.status(200).entity(engine.evaluate(json, expression)).build();
-    }
-
     @GET
     @Path("/deployments")
     @Produces({MediaType.APPLICATION_JSON})

@@ -6,7 +6,7 @@ import soya.framework.settler.*;
 public class EchoBuilder implements EvaluatorBuilder<EchoBuilder.Echo> {
 
     @Override
-    public Echo build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public Echo build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         Echo echo = new Echo();
         return echo;
     }

@@ -7,19 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component(name = "json_shifter")
-public class JsonShifterBuilder extends AbstractEvaluatorBuilder<JsonShifter> {
+public class JsonShifterBuilder implements EvaluatorBuilder<JsonShifter> {
 
     @Override
-    public JsonShifter build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public JsonShifter build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         JsonShifter evaluator = new JsonShifter();
 
         List<JsonShifter.Shifter> shifters = new ArrayList<>();
-        if(arguments.length == 1 && (arguments[0] instanceof FunctionChainNode)) {
+        if(arguments.length == 1 && (arguments[0] instanceof ArrayNode)) {
 
         } else {
             for(ProcessNode node: arguments) {
                 FunctionNode func = (FunctionNode) node;
-                shifters.add(create(func, context));
+                shifters.add(create(func, session.getContext()));
             }
         }
 
@@ -33,7 +33,7 @@ public class JsonShifterBuilder extends AbstractEvaluatorBuilder<JsonShifter> {
 
         for(ProcessNode arg: func.getArguments()) {
             if(sh.to == null) {
-                sh.to = ((EvaluateParameter) arg).getStringValue(context);
+                sh.to = ((AssignmentNode) arg).getStringValue(context);
             } else if(sh.from == null) {
                 sh.from = arg;
             }

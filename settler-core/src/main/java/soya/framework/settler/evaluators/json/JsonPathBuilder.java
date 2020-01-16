@@ -5,25 +5,26 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import soya.framework.settler.*;
+import soya.framework.settler.evaluators.AbstractEvaluator;
 import soya.framework.settler.evaluators.AbstractEvaluatorBuilder;
 
 @Component(name="json_path", arguments = "jsonPath")
 public class JsonPathBuilder extends AbstractEvaluatorBuilder<JsonPathBuilder.JsonPathEvaluator> {
 
     @Override
-    public JsonPathEvaluator build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
+    public JsonPathEvaluator build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         if(arguments.length != 1) {
             throw new IllegalFunctionArgumentException();
         }
 
         JsonPathEvaluator evaluator = new JsonPathEvaluator();
-        EvaluateParameter parameter = (EvaluateParameter) arguments[0];
-        evaluator.jsonPath = parameter.getStringValue(context);
+        AssignmentNode parameter = (AssignmentNode) arguments[0];
+        evaluator.jsonPath = parameter.getStringValue(session.getContext());
 
         return evaluator;
     }
 
-    static final class JsonPathEvaluator implements Evaluator {
+    static final class JsonPathEvaluator extends AbstractEvaluator {
 
         private String jsonPath;
         private JsonPathEvaluator() {

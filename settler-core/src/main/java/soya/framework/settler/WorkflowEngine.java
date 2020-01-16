@@ -2,11 +2,10 @@ package soya.framework.settler;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class WorkflowEngine extends Components {
     protected static WorkflowEngine instance;
@@ -19,38 +18,31 @@ public class WorkflowEngine extends Components {
         register(Processor.class.getPackage().getName());
     }
 
-    private WorkflowEngine(ProcessContext context, ExecutorService executorService) {
-        this.context = context;
-        this.executorService = executorService;
-    }
-
     protected WorkflowEngine() {
         this.context = new DefaultProcessContext();
         this.executorService = Executors.newSingleThreadExecutor();
     }
 
-    public String evaluate(String data, String expression) {
-        String result = data;
-        FunctionNode[] functions = FunctionNode.toFunctions(expression);
-        for (FunctionNode function : functions) {
-            Processor processor = create(function, context);
-            Method method = getProcessMethod(processor.getClass());
-            Object[] params = new Object[0];
-            if (method.getParameterCount() == 1) {
-                params = new Object[]{result};
+    protected WorkflowEngine(ExternalContext externalContext) {
+        this.context = new DefaultProcessContext(externalContext);
+        this.executorService = Executors.newSingleThreadExecutor();
+    }
+
+    protected WorkflowEngine(ProcessContext context, ExecutorService executorService) {
+        this.context = context;
+        this.executorService = executorService;
+    }
+
+    public Future<ProcessSession> execute(Workflow workflow) {
+        return executorService.submit(() -> {
+            ProcessSession session = new DefaultProcessSession(workflow.getContext());
+            for (ExecutableNode node : workflow.getTasks()) {
+
+
             }
 
-            try {
-                result = (String) method.invoke(processor, params);
-
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return result;
+            return session;
+        });
     }
 
     public static WorkflowEngine getInstance() {
@@ -58,6 +50,8 @@ public class WorkflowEngine extends Components {
     }
 
     static class DefaultProcessContext implements ProcessContext {
+
+        private ExternalContext externalContext;
         private Properties configuration;
 
         public DefaultProcessContext() {
@@ -75,6 +69,28 @@ public class WorkflowEngine extends Components {
                     e.printStackTrace();
                 }
             }
+        }
+
+        public DefaultProcessContext(ExternalContext externalContext) {
+            this.externalContext = externalContext;
+        }
+
+        @Override
+        public ExternalContext getExternalContext() {
+            return externalContext;
+        }
+    }
+
+    static class DefaultProcessSession implements ProcessSession {
+        private ProcessContext context;
+
+        private DefaultProcessSession(ProcessContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public ProcessContext getContext() {
+            return context;
         }
     }
 }

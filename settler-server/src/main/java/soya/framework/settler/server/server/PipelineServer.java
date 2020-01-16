@@ -1,6 +1,7 @@
 package soya.framework.settler.server.server;
 
 import com.google.common.eventbus.EventBus;
+import soya.framework.settler.ExternalContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public abstract class PipelineServer implements ExternalContext{
+public abstract class PipelineServer implements ExternalContext {
 
     private static PipelineServer instance;
 
