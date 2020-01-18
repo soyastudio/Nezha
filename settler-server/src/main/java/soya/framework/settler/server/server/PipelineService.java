@@ -8,6 +8,9 @@ import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
+import soya.framework.settler.ProcessSession;
+import soya.framework.settler.Workflow;
+import soya.framework.settler.WorkflowEngine;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -16,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 
 public class PipelineService implements ServiceEventListener<PipelineEvent> {
     static final Logger logger = LoggerFactory.getLogger(PipelineService.class);
@@ -89,7 +93,19 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
     protected void triggerPipeline(Pipeline pipeline) {
         logger.info("triggering pipeline: {}", pipeline.getName());
 
-        ack(pipeline);
+        ((Runnable) () -> {
+            Future<ProcessSession> future = WorkflowEngine.getInstance().execute(pipeline);
+            while (!future.isDone()) {
+                try {
+                    Thread.sleep(100l);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            ack(pipeline);
+        }).run();
+
     }
 
     protected void schedulePipeline(Pipeline pipeline) {
@@ -135,7 +151,6 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
         }
     }
 
-
     static class AckTask extends TimerTask {
         private PipelineService pipelineService;
 
@@ -160,102 +175,14 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
         @Override
         public Pipeline create(File base) throws PipelineCreateException {
             File pipelineYaml = new File(base, "pipeline.yaml");
-            Map<String, Object> configuration = null;
             try {
-                configuration = new Yaml().load(new FileInputStream(pipelineYaml));
+                Pipeline pipeline = Pipeline.fromYaml(base, new FileInputStream(pipelineYaml));
+                pipeline.init(PipelineServer.getInstance());
+                return pipeline;
 
             } catch (FileNotFoundException e) {
                 throw new PipelineCreateException(e);
-
             }
-
-            Pipeline.Builder builder = Pipeline.builder(base);
-            configuration.entrySet().forEach(e -> {
-                String key = e.getKey();
-                switch (key) {
-                    case "metadata":
-                        builder.metadata(parse(e.getValue(), Properties.class, base));
-                        break;
-                    case "functions":
-                        builder.functions(parse(e.getValue(), Properties.class, base));
-                        break;
-                    case "init-flow":
-                        if (e.getValue() instanceof Map) {
-                            builder.initFlow(parse(e.getValue(), Properties.class, base));
-                        } else {
-                            throw new IllegalArgumentException("Illegal format for 'init-flow' configuration, 'map' style is expected.");
-                        }
-                        break;
-                    case "main-flow":
-                        if (e.getValue() instanceof List) {
-                            builder.mainFlow(parse(e.getValue(), JsonArray.class, base));
-                        } else {
-                            throw new IllegalArgumentException("Illegal format for 'main-flow' configuration, 'list' style is expected.");
-                        }
-                        break;
-                    case "scheduler":
-                        builder.scheduler(parse(e.getValue(), Pipeline.Scheduler.class, base));
-                        break;
-                    default:
-                        ;
-                }
-
-            });
-            Pipeline pipeline = builder.create();
-
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            System.out.println(gson.toJson(pipeline.getConfiguration()));
-
-            pipeline.init(PipelineServer.getInstance());
-
-
-
-            return pipeline;
-        }
-
-        private <T> T parse(Object config, Class<T> type, File baseDir) {
-            T t = null;
-            Gson gson = new Gson();
-            if (Properties.class.isAssignableFrom(type)) {
-                Properties properties = new Properties();
-                if (config instanceof Map) {
-                    Map<String, String> map = (Map<String, String>) config;
-                    map.entrySet().forEach(e -> {
-                        properties.setProperty(e.getKey(), e.getValue());
-                    });
-
-                } else {
-                    File file = new File(baseDir, config.toString());
-                    try {
-                        properties.load(new FileInputStream(file));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                t = (T) properties;
-
-            } else if (JsonArray.class.isAssignableFrom(type)) {
-                JsonArray array = new JsonArray();
-                if (config instanceof String) {
-
-
-                } else if (config instanceof List) {
-                    List<Object> list = (List<Object>) config;
-                    list.forEach(e -> {
-                        if (e instanceof String) {
-                            array.add((String) e);
-                        }
-                    });
-                }
-
-                return (T) array;
-
-            } else {
-                t = gson.fromJson(gson.toJson(config), type);
-            }
-
-            return t;
         }
     }
 }
