@@ -19,12 +19,10 @@ public class WorkflowEngine extends Components {
     }
 
     public Future<ProcessSession> execute(Workflow workflow) {
-        System.out.println("-------------------- execute workflow: " + workflow.getName());
-
         return executorService.submit(() -> {
             ProcessSession session = new DefaultProcessSession(workflow.getContext());
             for (ExecutableNode node : workflow.getTasks()) {
-
+                TaskExecution execution = create(node, session);
 
             }
 

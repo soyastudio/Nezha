@@ -8,7 +8,6 @@ public class ProcessorSupport implements Processor, ProcessSessionAware {
     protected ProcessSession session;
 
     protected ProcessorSupport() {
-
     }
 
     public ProcessSession getSession() {

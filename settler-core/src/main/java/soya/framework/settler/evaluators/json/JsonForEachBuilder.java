@@ -11,8 +11,6 @@ public final class JsonForEachBuilder implements EvaluatorBuilder<JsonForEachBui
     @Override
     public JsonForEach build(ProcessNode[] arguments, ProcessSession session) throws ProcessorBuildException {
         JsonForEach eval = new JsonForEach();
-        FunctionNode function = (FunctionNode) arguments[0];
-        eval.evaluator = (JsonElementEvaluator) WorkflowEngine.getInstance().create(function, session);
         return eval;
     }
 

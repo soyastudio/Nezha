@@ -6,14 +6,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class Components {
-
     private static ImmutableMap<String, ProcessorBuilder> builders;
 
     protected static void register(String... packageName) {
@@ -28,24 +26,17 @@ public class Components {
             String name = def.name();
             ProcessorBuilder builder = newInstance(e);
             map.put(name, builder);
-
         });
 
         builders = ImmutableMap.copyOf(map);
     }
 
-    public static Method getProcessMethod(Class<? extends Processor> type) {
-        Class<?>[] interfaces = type.getInterfaces();
-        for(Class<?> intf: interfaces) {
-            if(intf.getAnnotation(ComponentType.class) != null) {
-                return intf.getMethods()[0];
-            }
-        }
-        return null;
+    public static ProcessorBuilder getProcessBuilder(String functionName) {
+        return builders.get(functionName);
     }
 
-    public static Processor create(FunctionNode function, ProcessSession session) {
-        return builders.get(function.getName()).build(function.getArguments(), session);
+    public static TaskExecution create(ExecutableNode executableNode, ProcessSession session) {
+        return new TaskExecution(executableNode, session);
     }
 
     public static String toJson(ProcessNode... nodes) {
