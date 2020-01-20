@@ -21,6 +21,8 @@ public class TaskExecution implements Callable<ProcessSession> {
     public ProcessSession call() throws Exception {
         TaskDefinition task = TaskDefinition.create(executableNode);
         // TODO:
+
+        System.out.println("--------------------- !!!");
         return session;
     }
 

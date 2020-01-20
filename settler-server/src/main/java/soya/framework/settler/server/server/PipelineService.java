@@ -1,22 +1,16 @@
 package soya.framework.settler.server.server;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 import soya.framework.settler.ProcessSession;
-import soya.framework.settler.Workflow;
-import soya.framework.settler.WorkflowEngine;
+import soya.framework.settler.support.SingletonWorkflowEngine;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
@@ -94,7 +88,7 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
         logger.info("triggering pipeline: {}", pipeline.getName());
 
         ((Runnable) () -> {
-            Future<ProcessSession> future = WorkflowEngine.getInstance().execute(pipeline);
+            Future<ProcessSession> future = SingletonWorkflowEngine.getInstance().execute(pipeline);
             while (!future.isDone()) {
                 try {
                     Thread.sleep(100l);

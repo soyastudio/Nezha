@@ -3,7 +3,6 @@ package soya.framework.settler.server.resource;
 import com.google.gson.Gson;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Component;
-import soya.framework.settler.WorkflowEngine;
 import soya.framework.settler.FunctionNode;
 import soya.framework.settler.server.server.PipelineDeploymentService;
 import soya.framework.settler.server.server.PipelineLogService;
