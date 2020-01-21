@@ -15,7 +15,11 @@ import java.util.Set;
 public class Components {
     private static ImmutableMap<String, ProcessorBuilder> builders;
 
-    protected static void register(String... packageName) {
+    static {
+        Components.register(Processor.class.getPackage().getName());
+    }
+
+    public static void register(String... packageName) {
         Map<String, ProcessorBuilder> map = new HashMap<>();
         if (builders != null) {
             map.putAll(builders);
@@ -34,15 +38,6 @@ public class Components {
 
     public static ProcessorBuilder getProcessBuilder(String functionName) {
         return builders.get(functionName);
-    }
-
-    public static TaskExecution create(ExecutableNode executableNode, ProcessSession session) {
-        return new TaskExecution(executableNode, session);
-    }
-
-    public static String toJson(ProcessNode... nodes) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(nodes);
     }
 
     private static ProcessorBuilder newInstance(Class<?> clazz) throws ProcessorBuildException {

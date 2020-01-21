@@ -5,6 +5,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import soya.framework.settler.*;
+import soya.framework.settler.support.TaskDefinition;
 
 public class JsonShifter extends JsonElementEvaluator {
     Shifter[] shifters;
@@ -39,7 +40,7 @@ public class JsonShifter extends JsonElementEvaluator {
 
             } else if(from instanceof FunctionNode) {
                 FunctionNode fun = (FunctionNode) from;
-                Evaluator evaluator = (Evaluator) Components.create(fun, null);
+                Evaluator evaluator = (Evaluator) TaskDefinition.create(fun, null);
                 String st = evaluator.evaluate(jsonElement.toString());
                 return new JsonPrimitive(st);
             }

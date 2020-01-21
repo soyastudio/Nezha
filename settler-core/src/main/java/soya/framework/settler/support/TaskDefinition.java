@@ -1,10 +1,7 @@
 package soya.framework.settler.support;
 
 import com.google.gson.JsonElement;
-import soya.framework.settler.ExecutableNode;
-import soya.framework.settler.FunctionNode;
-import soya.framework.settler.IllegalFunctionArgumentException;
-import soya.framework.settler.ProcessNodeType;
+import soya.framework.settler.*;
 
 public class TaskDefinition implements ExecutableNode {
 
@@ -43,7 +40,7 @@ public class TaskDefinition implements ExecutableNode {
         return functions;
     }
 
-    public static TaskDefinition create(ExecutableNode node) {
+    public static TaskDefinition create(ExecutableNode node, ProcessSession session) {
         if(node instanceof TaskDefinition) {
             return (TaskDefinition) node;
         } else if(node instanceof FunctionNode) {

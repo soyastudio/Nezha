@@ -6,14 +6,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class SingletonWorkflowEngine extends Components implements WorkflowEngine {
+public class SingletonWorkflowEngine implements WorkflowEngine {
     protected static SingletonWorkflowEngine instance;
 
     private ExecutorService executorService;
 
     static {
         instance = new SingletonWorkflowEngine();
-        register(Processor.class.getPackage().getName());
     }
 
     protected SingletonWorkflowEngine() {
@@ -26,8 +25,7 @@ public class SingletonWorkflowEngine extends Components implements WorkflowEngin
         return executorService.submit(() -> {
             ProcessSession session = new DefaultProcessSession(workflow.getContext());
             for (ExecutableNode node : workflow.getTasks()) {
-                TaskExecution execution = create(node, session);
-                execution.execute(executorService);
+
             }
 
             return session;

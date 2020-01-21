@@ -1,6 +1,7 @@
 package soya.framework.settler.evaluators.flow;
 
 import soya.framework.settler.*;
+import soya.framework.settler.support.TaskDefinition;
 
 @Component(name = "repeat")
 public class RepeatBuilder implements EvaluatorBuilder<RepeatBuilder.Repeat> {
@@ -13,7 +14,7 @@ public class RepeatBuilder implements EvaluatorBuilder<RepeatBuilder.Repeat> {
         }
 
         if (arguments.length > 1) {
-            repeat.executor = (Evaluator) Components.create((FunctionNode) arguments[1], session);
+            repeat.executor = (Evaluator) TaskDefinition.create((FunctionNode) arguments[1], session);
         }
 
         return repeat;

@@ -21,7 +21,7 @@ public class TaskExecution implements Callable<ProcessSession> {
 
     @Override
     public ProcessSession call() throws Exception {
-        TaskDefinition task = TaskDefinition.create(executableNode);
+        TaskDefinition task = TaskDefinition.create(executableNode, session);
         // TODO:
 
         System.out.println("--------------------- !!!");
