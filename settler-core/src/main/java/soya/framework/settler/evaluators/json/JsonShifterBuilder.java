@@ -14,7 +14,7 @@ public class JsonShifterBuilder implements EvaluatorBuilder<JsonShifter> {
         JsonShifter evaluator = new JsonShifter();
 
         List<JsonShifter.Shifter> shifters = new ArrayList<>();
-        if(arguments.length == 1 && (arguments[0] instanceof ArrayNode)) {
+        if(arguments.length == 1 ) {
 
         } else {
             for(ProcessNode node: arguments) {

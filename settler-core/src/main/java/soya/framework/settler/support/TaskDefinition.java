@@ -1,6 +1,10 @@
-package soya.framework.settler;
+package soya.framework.settler.support;
 
 import com.google.gson.JsonElement;
+import soya.framework.settler.ExecutableNode;
+import soya.framework.settler.FunctionNode;
+import soya.framework.settler.IllegalFunctionArgumentException;
+import soya.framework.settler.ProcessNodeType;
 
 public class TaskDefinition implements ExecutableNode {
 

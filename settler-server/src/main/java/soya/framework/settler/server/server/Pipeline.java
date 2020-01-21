@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import org.yaml.snakeyaml.Yaml;
 import soya.framework.settler.*;
+import soya.framework.settler.support.TaskDefinition;
 
 import java.io.File;
 import java.io.FileInputStream;

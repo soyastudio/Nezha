@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.ClassPath;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import soya.framework.settler.support.TaskExecution;
 
 import java.io.IOException;
 import java.util.HashMap;

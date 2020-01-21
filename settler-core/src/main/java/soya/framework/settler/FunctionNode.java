@@ -128,11 +128,6 @@ public final class FunctionNode implements ExecutableNode {
         if (exp.startsWith("(") && exp.endsWith(")")) {
             node = toFunction("INNER" + exp);
 
-        } else if (exp.startsWith("[") && exp.endsWith("]")) {
-            String s = exp.substring(1, exp.length() - 1);
-            ProcessNode[] nodes = toArray(s);
-            node = new ArrayNode(nodes);
-
         } else if (!exp.contains("(")) {
             node = new AssignmentNode(exp);
 

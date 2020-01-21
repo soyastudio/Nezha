@@ -1,4 +1,6 @@
-package soya.framework.settler;
+package soya.framework.settler.support;
+
+import soya.framework.settler.*;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
