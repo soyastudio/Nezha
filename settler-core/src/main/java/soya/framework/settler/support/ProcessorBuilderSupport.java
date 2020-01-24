@@ -6,7 +6,7 @@ import soya.framework.settler.*;
 
 import java.lang.reflect.ParameterizedType;
 
-public abstract class ProcessorBuilderSupport<T extends ProcessorSupport> implements ProcessorBuilder<T> {
+public abstract class ProcessorBuilderSupport<T extends Processor> implements ProcessorBuilder<T> {
 
     protected Gson gson;
     protected Class<T> clazz;
@@ -18,10 +18,9 @@ public abstract class ProcessorBuilderSupport<T extends ProcessorSupport> implem
         this.properties = def.arguments();
     }
 
-    public T create(String[] arguments, ProcessSession session) throws ProcessorBuildException {
+    public T create(String[] arguments, ProcessContext context) throws ProcessorBuildException {
         try {
-            T t = gson.fromJson(toJsonObject(clazz, properties, arguments, session.getContext()), clazz);
-            t.session = session;
+            T t = gson.fromJson(toJsonObject(clazz, properties, arguments, context), clazz);
             return t;
         } catch (NoSuchFieldException e) {
             throw new ProcessorBuildException(e);

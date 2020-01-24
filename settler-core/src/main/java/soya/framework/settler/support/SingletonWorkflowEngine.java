@@ -20,14 +20,11 @@ public class SingletonWorkflowEngine implements WorkflowEngine {
     }
 
     public Future<ProcessSession> execute(Workflow workflow) {
-
-
         return executorService.submit(() -> {
             ProcessSession session = new DefaultProcessSession(workflow.getContext());
             for (ExecutableNode node : workflow.getTasks()) {
 
             }
-
             return session;
         });
     }
@@ -38,6 +35,7 @@ public class SingletonWorkflowEngine implements WorkflowEngine {
 
     static class DefaultProcessSession implements ProcessSession {
         private ProcessContext context;
+        private DataObject dataObject;
 
         private DefaultProcessSession(ProcessContext context) {
             this.context = context;
@@ -46,6 +44,16 @@ public class SingletonWorkflowEngine implements WorkflowEngine {
         @Override
         public ProcessContext getContext() {
             return context;
+        }
+
+        @Override
+        public DataObject current() {
+            return dataObject;
+        }
+
+        @Override
+        public synchronized void update(DataObject dataObject) {
+            this.dataObject = dataObject;
         }
     }
 }

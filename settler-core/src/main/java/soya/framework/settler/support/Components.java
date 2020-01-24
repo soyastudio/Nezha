@@ -1,10 +1,8 @@
-package soya.framework.settler;
+package soya.framework.settler.support;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.ClassPath;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import soya.framework.settler.support.TaskExecution;
+import soya.framework.settler.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,7 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Components {
+class Components {
     private static ImmutableMap<String, ProcessorBuilder> builders;
 
     static {
@@ -34,6 +32,21 @@ public class Components {
         });
 
         builders = ImmutableMap.copyOf(map);
+    }
+
+    public static Processor create(ExecutableNode node, ProcessContext context) {
+        Processor processor = null;
+        if(node instanceof FunctionNode) {
+            FunctionNode functionNode = (FunctionNode) node;
+
+        }
+        return processor;
+    }
+
+    private Processor fromFunctionNode(FunctionNode functionNode, ProcessContext context) {
+        ProcessorBuilder builder = getProcessBuilder(functionNode.getName());
+
+        return builder.build(functionNode.getArguments(), context);
     }
 
     public static ProcessorBuilder getProcessBuilder(String functionName) {
