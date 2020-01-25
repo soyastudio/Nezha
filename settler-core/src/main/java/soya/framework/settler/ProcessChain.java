@@ -24,7 +24,7 @@ public class ProcessChain implements Processor {
         return new Builder();
     }
 
-    static class Builder {
+    public static class Builder {
         private List<Processor> chain = new ArrayList<>();
 
         public Builder add(Processor processor) {

@@ -23,7 +23,7 @@ public class SingletonWorkflowEngine implements WorkflowEngine {
         return executorService.submit(() -> {
             ProcessSession session = new DefaultProcessSession(workflow.getContext());
             for (ExecutableNode node : workflow.getTasks()) {
-
+                TaskDefinition.create(node, workflow.getContext()).process(session);
             }
             return session;
         });

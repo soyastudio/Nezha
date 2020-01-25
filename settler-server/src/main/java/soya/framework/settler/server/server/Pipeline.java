@@ -56,7 +56,7 @@ public class Pipeline implements Workflow {
         if (this.context != null) {
             throw new PipelineInitializeException("Pipeline is already initialized.");
         }
-        this.context = new PipelineContext(configuration, externalContext);
+        this.context = new PipelineContext(configuration, base, externalContext);
 
         initWorkflow(configuration.mainFlow, externalContext);
 
@@ -297,19 +297,20 @@ public class Pipeline implements Workflow {
         }
     }
 
-    static class PipelineContext implements ProcessContext {
+    static class PipelineContext implements ProcessContext, VirtualFileSystemAware {
+        private File home;
         private ExternalContext externalContext;
 
         private Properties properties = new Properties();
         private Map<String, Object> attributes = new ConcurrentHashMap<>();
 
-        private PipelineContext(Configuration configuration, ExternalContext externalContext) throws PipelineInitializeException {
+        private PipelineContext(Configuration configuration, File home, ExternalContext externalContext) throws PipelineInitializeException {
+            this.home = home;
             this.externalContext = externalContext;
 
             evaluateProperties(configuration, externalContext);
             defineFunctions(configuration.functions, externalContext);
             loadData(configuration.initFlow, externalContext);
-
 
         }
 
@@ -332,6 +333,11 @@ public class Pipeline implements Workflow {
         }
 
         private void loadData(Properties init, ExternalContext externalContext) throws PipelineInitializeException {
+        }
+
+        @Override
+        public File getHome() {
+            return home;
         }
 
         @Override

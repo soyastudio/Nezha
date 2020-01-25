@@ -3,20 +3,24 @@ package soya.framework.settler.support;
 import com.google.gson.JsonElement;
 import soya.framework.settler.*;
 
-public class TaskDefinition implements ExecutableNode {
+public class TaskDefinition extends Components implements ExecutableNode {
 
     private String name;
     private FunctionNode[] functions;
 
+    private TaskDefinition(ExecutableNode executableNode) {
+
+    }
+
     private TaskDefinition(FunctionNode[] functions) {
-        if(functions == null || functions.length == 0) {
+        if (functions == null || functions.length == 0) {
             throw new IllegalFunctionArgumentException("No function defined.");
         }
         this.functions = functions;
     }
 
     private TaskDefinition(String name, FunctionNode[] functions) {
-        if(functions == null || functions.length == 0) {
+        if (functions == null || functions.length == 0) {
             throw new IllegalFunctionArgumentException("No function defined.");
         }
         this.name = name;
@@ -40,31 +44,29 @@ public class TaskDefinition implements ExecutableNode {
         return functions;
     }
 
-    public static TaskDefinition create(ExecutableNode node, ProcessSession session) {
-        if(node instanceof TaskDefinition) {
-            return (TaskDefinition) node;
-        } else if(node instanceof FunctionNode) {
-            return create((FunctionNode) node);
+    public Processor build(ProcessContext context) throws ProcessorBuildException {
+        if (functions == null || functions.length == 0) {
+            throw new ProcessorBuildException("");
+
+        } else if (functions.length == 1) {
+            FunctionNode functionNode = getFunction();
+            return fromFunctionNode(functionNode, context);
+
         } else {
-            System.out.println("------------- TODO...");
-            return null;
+            ProcessChain.Builder builder = ProcessChain.builder();
+            for(FunctionNode fn: functions) {
+                builder.add(fromFunctionNode(fn, context));
+            }
+            return builder.create();
         }
     }
 
-    public static TaskDefinition create(FunctionNode functionNode) {
-        return new TaskDefinition(new FunctionNode[] {functionNode});
-    }
 
-    public static TaskDefinition create(FunctionNode[] functionNodes) {
-        return new TaskDefinition(functionNodes);
-    }
+    private Processor fromFunctionNode(FunctionNode functionNode, ProcessContext context) throws ProcessorBuildException {
+        // TODO: redefined functions:
+        ProcessorBuilder builder = getProcessBuilder(functionNode.getName());
 
-    public static TaskDefinition create(String name, FunctionNode functionNode) {
-        return new TaskDefinition(name, new FunctionNode[] {functionNode});
-    }
-
-    public static TaskDefinition create(String name, FunctionNode[] functionNodes) {
-        return new TaskDefinition(name, functionNodes);
+        return builder.build(functionNode.getArguments(), context);
     }
 
     public static TaskDefinition parse(String name, JsonElement jsonElement) {
@@ -76,4 +78,13 @@ public class TaskDefinition implements ExecutableNode {
     public static TaskDefinition parse(JsonElement jsonElement) {
         return new TaskDefinition(FunctionNode.toFunctions(jsonElement.getAsString()));
     }
+
+    public static Processor create(ExecutableNode node, ProcessContext context) {
+        if (node instanceof TaskDefinition) {
+            return ((TaskDefinition) node).build(context);
+        } else {
+            return new TaskDefinition(node).build(context);
+        }
+    }
+
 }

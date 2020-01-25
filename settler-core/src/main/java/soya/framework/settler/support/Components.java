@@ -34,21 +34,6 @@ class Components {
         builders = ImmutableMap.copyOf(map);
     }
 
-    public static Processor create(ExecutableNode node, ProcessContext context) {
-        Processor processor = null;
-        if(node instanceof FunctionNode) {
-            FunctionNode functionNode = (FunctionNode) node;
-
-        }
-        return processor;
-    }
-
-    private Processor fromFunctionNode(FunctionNode functionNode, ProcessContext context) {
-        ProcessorBuilder builder = getProcessBuilder(functionNode.getName());
-
-        return builder.build(functionNode.getArguments(), context);
-    }
-
     public static ProcessorBuilder getProcessBuilder(String functionName) {
         return builders.get(functionName);
     }

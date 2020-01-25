@@ -13,6 +13,10 @@ public final class AssignmentNode implements ProcessNode {
         return type;
     }
 
+    public boolean isJsonObject() {
+        return value.startsWith("{") && value.endsWith("}");
+    }
+
     public String getValue() {
         return value;
     }
