@@ -2,7 +2,6 @@ package soya.framework.settler.component;
 
 import soya.framework.settler.*;
 
-@ComponentType
 public abstract class Extractor implements Processor {
     protected Extractor() {
     }
@@ -12,5 +11,5 @@ public abstract class Extractor implements Processor {
         session.update(extract());
     }
 
-    protected abstract DataObject extract();
+    protected abstract DataObject extract() throws ExtractException;
 }

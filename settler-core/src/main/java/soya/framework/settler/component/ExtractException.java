@@ -1,4 +1,6 @@
-package soya.framework.settler;
+package soya.framework.settler.component;
+
+import soya.framework.settler.ProcessException;
 
 public class ExtractException extends ProcessException {
     public ExtractException() {

@@ -27,11 +27,6 @@ public class TaskDefinition extends Components implements ExecutableNode {
         this.functions = functions;
     }
 
-    @Override
-    public ProcessNodeType getType() {
-        return functions.length == 1 ? ProcessNodeType.FUNCTION : ProcessNodeType.CHAIN;
-    }
-
     public String getName() {
         return name;
     }
@@ -54,7 +49,7 @@ public class TaskDefinition extends Components implements ExecutableNode {
 
         } else {
             ProcessChain.Builder builder = ProcessChain.builder();
-            for(FunctionNode fn: functions) {
+            for (FunctionNode fn : functions) {
                 builder.add(fromFunctionNode(fn, context));
             }
             return builder.create();

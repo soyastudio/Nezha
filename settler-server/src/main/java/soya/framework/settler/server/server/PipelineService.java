@@ -5,6 +5,7 @@ import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import soya.framework.settler.ProcessSession;
+import soya.framework.settler.WorkflowCallback;
 import soya.framework.settler.support.SingletonWorkflowEngine;
 
 import javax.annotation.PostConstruct;
@@ -87,18 +88,17 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
     protected void triggerPipeline(Pipeline pipeline) {
         logger.info("triggering pipeline: {}", pipeline.getName());
 
-        ((Runnable) () -> {
-            Future<ProcessSession> future = SingletonWorkflowEngine.getInstance().execute(pipeline);
-            while (!future.isDone()) {
-                try {
-                    Thread.sleep(100l);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        SingletonWorkflowEngine.getInstance().execute(pipeline, new WorkflowCallback() {
+            @Override
+            public void onSuccess(ProcessSession session) {
+                ack(pipeline);
             }
 
-            ack(pipeline);
-        }).run();
+            @Override
+            public void onException(Exception e, ProcessSession session) {
+                ack(pipeline);
+            }
+        });
 
     }
 

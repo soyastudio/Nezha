@@ -2,6 +2,7 @@ package soya.framework.settler.support;
 
 import soya.framework.settler.*;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -19,7 +20,7 @@ public class SingletonWorkflowEngine implements WorkflowEngine {
         this.executorService = Executors.newSingleThreadExecutor();
     }
 
-    public Future<ProcessSession> execute(Workflow workflow) {
+    public Future<ProcessSession> run(Workflow workflow) {
         return executorService.submit(() -> {
             ProcessSession session = new DefaultProcessSession(workflow.getContext());
             for (ExecutableNode node : workflow.getTasks()) {
@@ -31,6 +32,40 @@ public class SingletonWorkflowEngine implements WorkflowEngine {
 
     public static SingletonWorkflowEngine getInstance() {
         return instance;
+    }
+
+    @Override
+    public void execute(Workflow workflow) throws ProcessException {
+        run(workflow);
+    }
+
+    @Override
+    public void execute(Workflow workflow, WorkflowCallback callback) throws ProcessException {
+        Future<ProcessSession> future = run(workflow);
+        if(callback != null) {
+            while (!future.isDone()) {
+                try {
+                    Thread.sleep(100L);
+                } catch (InterruptedException e) {
+                    throw new ProcessException(e);
+                }
+            }
+
+            try {
+                callback.onSuccess(future.get());
+
+            } catch (InterruptedException e) {
+                throw new ProcessException(e);
+
+            } catch (ExecutionException e) {
+                try {
+                    callback.onException(e, future.get());
+
+                } catch (Exception ex) {
+                    throw new ProcessException(e);
+                }
+            }
+        }
     }
 
     static class DefaultProcessSession implements ProcessSession {

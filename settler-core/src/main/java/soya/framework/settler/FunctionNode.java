@@ -5,18 +5,12 @@ import java.util.List;
 import java.util.Stack;
 
 public final class FunctionNode implements ExecutableNode {
-    private final ProcessNodeType type = ProcessNodeType.FUNCTION;
     private final String name;
     private final ProcessNode[] arguments;
 
     private FunctionNode(String name, ProcessNode[] arguments) {
         this.name = name;
         this.arguments = arguments;
-    }
-
-    @Override
-    public ProcessNodeType getType() {
-        return type;
     }
 
     public String getName() {

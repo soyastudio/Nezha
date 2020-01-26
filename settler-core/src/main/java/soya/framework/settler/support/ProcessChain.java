@@ -1,6 +1,9 @@
-package soya.framework.settler;
+package soya.framework.settler.support;
 
 import com.google.common.collect.ImmutableList;
+import soya.framework.settler.ProcessException;
+import soya.framework.settler.ProcessSession;
+import soya.framework.settler.Processor;
 
 import java.util.ArrayList;
 import java.util.List;
