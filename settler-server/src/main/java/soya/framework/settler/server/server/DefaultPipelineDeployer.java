@@ -104,7 +104,7 @@ public class DefaultPipelineDeployer implements PipelineDeployer {
     }
 
     protected void doStart(PipelineDeployment deployment) throws Exception {
-        PipelineServer.getInstance().publish(new PipelineScheduleEvent(deployment.getName(), deployment.getBaseDir()));
+        PipelineServer.getInstance().publish(new PipelineInitializationEvent(deployment.getName(), deployment.getBaseDir()));
     }
 
     protected void doStop(PipelineDeployment deployment) throws Exception {

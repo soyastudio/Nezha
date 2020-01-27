@@ -37,7 +37,25 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
 
     @Subscribe
     public void onEvent(PipelineEvent pipelineEvent) {
-        if (pipelineEvent instanceof PipelineAckEvent) {
+        if(pipelineEvent instanceof PipelineInitializationEvent) {
+            logger.info("Initializing pipeline: {}", pipelineEvent.getPipeline());
+            PipelineInitializationEvent event = (PipelineInitializationEvent) pipelineEvent;
+            try {
+                Pipeline pipeline = pipelineFactory.create(event.getDir());
+                pipelines.put(pipeline.getName(), pipeline);
+
+                if(pipeline.getConfiguration().getScheduler() != null) {
+                    ((Runnable) () -> {
+                        schedulePipeline(pipeline);
+                    }).run();
+                }
+
+            } catch (PipelineCreateException e) {
+                //TODO:
+                e.printStackTrace();
+            }
+
+        } else if (pipelineEvent instanceof PipelineAckEvent) {
             currentEvents.remove(pipelineEvent.getPipeline());
 
         } else if (currentEvents.containsKey(pipelineEvent.getPipeline())) {
@@ -62,14 +80,22 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
     }
 
     protected void handle(PipelineEvent event) {
+        if(!pipelines.containsKey(event.getPipeline())) {
+            logger.warn("Pipeline not defined: {}", event.getPipeline());
+            return;
+        }
+
         currentEvents.put(event.getPipeline(), event);
         if (event instanceof PipelineScheduleEvent) {
             PipelineScheduleEvent scheduleEvent = (PipelineScheduleEvent) event;
             try {
                 Pipeline pipeline = pipelineFactory.create(scheduleEvent.getDir());
                 pipelines.put(event.getPipeline(), pipeline);
-                schedulePipeline(pipeline);
-
+                if(pipeline.getConfiguration().getScheduler() != null) {
+                    ((Runnable) () -> {
+                        schedulePipeline(pipeline);
+                    }).run();
+                }
             } catch (Exception e) {
                 // TODO:
                 throw new RuntimeException(e);
@@ -112,6 +138,7 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
 
                 int interval = pipeline.getConfiguration().getScheduler().getInterval();
                 int delay = pipeline.getConfiguration().getScheduler().getDelay();
+
                 String calendar = pipeline.getConfiguration().getScheduler().getCalendar();
 
                 Trigger trigger = TriggerBuilder.newTrigger().withIdentity(pipeline.getName(), "pipeline")

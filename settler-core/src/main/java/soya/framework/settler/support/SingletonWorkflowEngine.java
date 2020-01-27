@@ -20,9 +20,13 @@ public class SingletonWorkflowEngine implements WorkflowEngine {
         this.executorService = Executors.newSingleThreadExecutor();
     }
 
-    public Future<ProcessSession> run(Workflow workflow) {
+    private Future<ProcessSession> run(DataObject dataObject, Workflow workflow) {
         return executorService.submit(() -> {
             ProcessSession session = new DefaultProcessSession(workflow.getContext());
+            if (dataObject != null) {
+                session.update(dataObject);
+            }
+
             for (ExecutableNode node : workflow.getTasks()) {
                 TaskDefinition.create(node, workflow.getContext()).process(session);
             }
@@ -36,13 +40,19 @@ public class SingletonWorkflowEngine implements WorkflowEngine {
 
     @Override
     public void execute(Workflow workflow) throws ProcessException {
-        run(workflow);
+        run(null, workflow);
     }
 
     @Override
     public void execute(Workflow workflow, WorkflowCallback callback) throws ProcessException {
-        Future<ProcessSession> future = run(workflow);
-        if(callback != null) {
+        execute(null, workflow, callback);
+    }
+
+    @Override
+    public void execute(DataObject data, Workflow workflow, WorkflowCallback callback) throws ProcessException {
+
+        Future<ProcessSession> future = run(data, workflow);
+        if (callback != null) {
             while (!future.isDone()) {
                 try {
                     Thread.sleep(100L);

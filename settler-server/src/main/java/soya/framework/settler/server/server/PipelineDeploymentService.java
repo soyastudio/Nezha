@@ -50,7 +50,7 @@ public class PipelineDeploymentService implements ServiceEventListener<PipelineD
 
         Timer timer = new Timer();
         deployments.values().forEach(e -> {
-            timer.schedule(new DeploymentInitializer(e, deployer), new Random().nextInt(50000));
+            timer.schedule(new DeploymentInitializer(e, deployer), new Random().nextInt(5000));
 
         });
         timer.schedule(new DeploymentScanner(deploymentDir), 60000L, 15000L);

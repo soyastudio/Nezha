@@ -6,6 +6,7 @@ import io.swagger.jaxrs.listing.SwaggerSerializers;
 import io.swagger.models.Swagger;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
+import soya.framework.settler.server.resource.EventBusResource;
 import soya.framework.settler.server.resource.ServerResource;
 
 import javax.ws.rs.ApplicationPath;
@@ -15,6 +16,7 @@ import javax.ws.rs.ApplicationPath;
 public class JerseyConfig extends ResourceConfig {
 
     public JerseyConfig() {
+        register(EventBusResource.class);
         register(ServerResource.class);
         swaggerConfig();
     }

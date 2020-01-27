@@ -44,8 +44,6 @@ public class ServerResource {
         return Response.status(200).entity(service.getDeployments()).build();
     }
 
-
-
     @POST
     @Path("/pipeline/{pipeline}")
     @Produces({MediaType.APPLICATION_JSON})
