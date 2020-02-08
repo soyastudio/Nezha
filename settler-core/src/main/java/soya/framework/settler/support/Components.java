@@ -2,19 +2,23 @@ package soya.framework.settler.support;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.ClassPath;
-import soya.framework.settler.*;
+import soya.framework.settler.Component;
+import soya.framework.settler.Processor;
+import soya.framework.settler.ProcessorBuildException;
+import soya.framework.settler.ProcessorBuilder;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 class Components {
     private static ImmutableMap<String, ProcessorBuilder> builders;
+    private static Set<String> registeredPackages = new LinkedHashSet<>();
+    private static Set<PackageRegistrationListener> registrationListeners = new HashSet<>();
 
     static {
-        Components.register(Processor.class.getPackage().getName());
+        String defaultPackage = Processor.class.getPackage().getName();
+        registeredPackages.add(defaultPackage);
+        register(defaultPackage);
     }
 
     public static void register(String... packageName) {
@@ -28,10 +32,21 @@ class Components {
             Component def = e.getAnnotation(Component.class);
             String name = def.name();
             ProcessorBuilder builder = newInstance(e);
+            if(builder instanceof PackageRegistrationListener) {
+                registrationListeners.add((PackageRegistrationListener) builder);
+            }
             map.put(name, builder);
         });
 
         builders = ImmutableMap.copyOf(map);
+
+        registrationListeners.forEach(e -> {
+            e.packageRegistered(packageName);
+        });
+    }
+
+    public static String[] getRegisteredPackages() {
+        return registeredPackages.toArray(new String[registeredPackages.size()]);
     }
 
     public static ProcessorBuilder getProcessBuilder(String functionName) {

@@ -2,9 +2,10 @@ package soya.framework.settler.server.server;
 
 import java.io.File;
 
-public class PipelineDeployment implements Comparable<PipelineDeployment>{
+public class PipelineDeployment implements Comparable<PipelineDeployment> {
 
     private transient File baseDir;
+
     private String name;
     private DeploymentState state;
 
@@ -37,6 +38,10 @@ public class PipelineDeployment implements Comparable<PipelineDeployment>{
     @Override
     public int compareTo(PipelineDeployment o) {
         return this.name.compareTo(o.name);
+    }
+
+    static class DeploymentDetails {
+
     }
 
     static enum DeploymentState {

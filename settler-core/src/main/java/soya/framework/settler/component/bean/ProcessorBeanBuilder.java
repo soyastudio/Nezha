@@ -2,12 +2,13 @@ package soya.framework.settler.component.bean;
 
 import com.google.gson.Gson;
 import soya.framework.settler.*;
+import soya.framework.settler.support.PackageRegistrationListener;
 import soya.framework.settler.support.ProcessorBuilderSupport;
 
 import java.lang.reflect.Type;
 
 @Component(name = "process")
-public class ProcessorBeanBuilder extends ProcessorBuilderSupport<Processor> {
+public class ProcessorBeanBuilder extends ProcessorBuilderSupport<Processor> implements PackageRegistrationListener<ProcessBean> {
 
     @Override
     public Processor build(ProcessNode[] arguments, ProcessContext context) throws ProcessorBuildException {
@@ -40,5 +41,10 @@ public class ProcessorBeanBuilder extends ProcessorBuilderSupport<Processor> {
         }
 
         return processor;
+    }
+
+    @Override
+    public void packageRegistered(String... packageName) {
+        System.out.println("===================== scan for ProcessBean...");
     }
 }

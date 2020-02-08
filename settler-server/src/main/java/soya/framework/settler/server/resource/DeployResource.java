@@ -3,10 +3,14 @@ package soya.framework.settler.server.resource;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Component;
 import soya.framework.settler.server.server.PipelineDeployEvent;
+import soya.framework.settler.server.server.PipelineDeployService;
+import soya.framework.settler.server.server.PipelineDeployment;
 import soya.framework.settler.server.server.PipelineServer;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Component
 @Path("/deploy")
@@ -15,13 +19,18 @@ public class DeployResource {
 
     @GET
     @Path("/deployments")
+    @Produces({MediaType.APPLICATION_JSON})
     public Response deployments() {
-        return Response.status(200).build();
+        List<PipelineDeployment> list = PipelineServer.getInstance().getService(PipelineDeployService.class).getDeployments();
+        return Response.status(200).entity(list).build();
     }
 
     @GET
     @Path("/{pipeline}")
     public Response deployment(@PathParam("pipeline") String pipeline) {
+        PipelineDeployService deployService = PipelineServer.getInstance().getService(PipelineDeployService.class);
+        deployService.getDeployments();
+
         return Response.status(200).build();
     }
 

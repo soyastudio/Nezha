@@ -25,6 +25,10 @@ public class PipelineDeployService implements ServiceEventListener<PipelineDeplo
         return list;
     }
 
+    public PipelineDeployment getDeployment(String name) {
+        return deployments.get(name);
+    }
+
     @PostConstruct
     void init() {
         File home = PipelineServer.getInstance().getHome();
@@ -77,7 +81,7 @@ public class PipelineDeployService implements ServiceEventListener<PipelineDeplo
 
     @Subscribe
     public void onEvent(PipelineDeployEvent event) {
-        System.out.println("================= " + event.getPipeline());
+
     }
 
     static class DeploymentInitializer extends TimerTask {
@@ -107,9 +111,10 @@ public class PipelineDeployService implements ServiceEventListener<PipelineDeplo
         public void run() {
             File[] files = base.listFiles();
             for (File file : files) {
-                String extension = Files.getFileExtension(file.getName());
-
-                PipelineServer.getInstance().publish(new PipelineDeployEvent(file.getName(), PipelineDeployEvent.DeployEventType.SUCCESS));
+                Optional<PipelineDeployEvent> optional = PipelineDeployEvent.fromFile(file);
+                if(optional.isPresent()) {
+                    PipelineServer.getInstance().publish(optional.get());
+                }
 
                 try {
                     FileUtils.forceDelete(file);

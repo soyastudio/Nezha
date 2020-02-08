@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import soya.framework.settler.server.server.*;
 
+import javax.inject.Named;
+
 @SpringBootApplication(scanBasePackages = {"soya.framework.settler.server"})
 public class SettlerServer extends PipelineServer {
     private static final Logger logger = LoggerFactory.getLogger(SettlerServer.class);

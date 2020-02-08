@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 public interface PipelineDeployer {
+
     boolean deployable(File dir);
 
     PipelineDeployment create(File dir);

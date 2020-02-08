@@ -17,9 +17,13 @@ import javax.ws.rs.ApplicationPath;
 public class JerseyConfig extends ResourceConfig {
 
     public JerseyConfig() {
+
+        register(GsonMessageBodyHandler.class);
+
         register(DeployResource.class);
         register(EventBusResource.class);
         register(ServerResource.class);
+
         swaggerConfig();
     }
 
