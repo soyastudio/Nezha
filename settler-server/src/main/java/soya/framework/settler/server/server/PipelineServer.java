@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class PipelineServer implements ExternalContext {
 
@@ -22,7 +24,6 @@ public abstract class PipelineServer implements ExternalContext {
         try {
             init();
             instance = this;
-
         } catch (Exception e) {
             throw new ExceptionInInitializerError(e);
         }
@@ -74,6 +75,8 @@ public abstract class PipelineServer implements ExternalContext {
         }
         System.setProperty("pipeline.server.log.dir", log.getAbsolutePath());
 
+        Timer timer = new Timer("Event Tracker");
+        timer.schedule(new TracingTask(), 1000, 1000);
 
     }
 
@@ -91,11 +94,21 @@ public abstract class PipelineServer implements ExternalContext {
 
     public void publish(ServiceEvent event) {
         eventBus.post(event);
+        if(event instanceof TraceableEvent) {
+
+        }
     }
 
     protected void register(ServiceEventListener... listeners) {
         for(ServiceEventListener listener: listeners) {
             eventBus.register(listener);
+        }
+    }
+
+    private class TracingTask extends TimerTask {
+        @Override
+        public void run() {
+
         }
     }
 }

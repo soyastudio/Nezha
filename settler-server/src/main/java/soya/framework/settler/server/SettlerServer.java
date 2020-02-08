@@ -41,8 +41,8 @@ public class SettlerServer extends PipelineServer {
     }
 
     @Bean
-    PipelineDeploymentService pipelineDeploymentService() {
-        return new PipelineDeploymentService();
+    PipelineDeployService pipelineDeploymentService() {
+        return new PipelineDeployService();
     }
 
     @Bean

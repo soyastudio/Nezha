@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Component;
 import soya.framework.settler.FunctionNode;
-import soya.framework.settler.server.server.PipelineDeploymentService;
+import soya.framework.settler.server.server.PipelineDeployService;
 import soya.framework.settler.server.server.PipelineLogService;
 import soya.framework.settler.server.server.PipelineTriggerEvent;
 import soya.framework.settler.server.server.PipelineServer;
@@ -32,7 +32,7 @@ public class ServerResource {
     @Path("/deployments")
     @Produces({MediaType.APPLICATION_JSON})
     public Response deployments() {
-        PipelineDeploymentService service = PipelineServer.getInstance().getService(PipelineDeploymentService.class);
+        PipelineDeployService service = PipelineServer.getInstance().getService(PipelineDeployService.class);
         return Response.status(200).entity(service.getDeployments()).build();
     }
 
@@ -40,7 +40,7 @@ public class ServerResource {
     @Path("/deployment/{pipeline}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response deployment(@PathParam("pipeline") String pipeline) {
-        PipelineDeploymentService service = PipelineServer.getInstance().getService(PipelineDeploymentService.class);
+        PipelineDeployService service = PipelineServer.getInstance().getService(PipelineDeployService.class);
         return Response.status(200).entity(service.getDeployments()).build();
     }
 

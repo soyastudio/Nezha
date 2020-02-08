@@ -10,12 +10,14 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PipelineDeploymentService implements ServiceEventListener<PipelineDeploymentEvent> {
+public class PipelineDeployService implements ServiceEventListener<PipelineDeployEvent> {
     private File pipelineHome;
     private File deploymentDir;
     private Map<String, PipelineDeployment> deployments = new ConcurrentHashMap<>();
 
     private PipelineDeployer deployer = new DefaultPipelineDeployer();
+
+    private Map<String, PipelineDeployEvent> events = new ConcurrentHashMap<>();
 
     public List<PipelineDeployment> getDeployments() {
         List<PipelineDeployment> list = new ArrayList<>(deployments.values());
@@ -47,59 +49,35 @@ public class PipelineDeploymentService implements ServiceEventListener<PipelineD
             }
         }
 
-
         Timer timer = new Timer();
         deployments.values().forEach(e -> {
             timer.schedule(new DeploymentInitializer(e, deployer), new Random().nextInt(5000));
 
         });
-        timer.schedule(new DeploymentScanner(deploymentDir), 60000L, 15000L);
+
+        while (!readyForScan()) {
+            try {
+                Thread.sleep(200L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        timer.schedule(new DeploymentScanner(deploymentDir), 100L, 15000L);
+    }
+
+    private boolean readyForScan() {
+        for (PipelineDeployment deployment : deployments.values()) {
+            if (deployment.processing()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Subscribe
-    public void onEvent(PipelineDeploymentEvent event) {
-        File file = event.getFile();
-        if (file.isDirectory() && deployer.deployable(file)) {
-            try {
-                PipelineDeployment deployment = deployer.deploy(file, pipelineHome);
-                if (deployment != null) {
-                    deployments.put(deployment.getName(), deployment);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            String extension = Files.getFileExtension(file.getName());
-            String pipeline = file.getName().substring(0, file.getName().lastIndexOf("." + extension));
-            PipelineDeployment deployment = deployments.get(pipeline);
-            if (deployment == null) {
-
-            } else {
-                switch (extension) {
-                    case PipelineDeploymentEvent.START_EXTENSION:
-                        deployer.start(deployment);
-                        break;
-                    case PipelineDeploymentEvent.STOP_EXTENSION:
-                        deployer.stop(deployment);
-                        break;
-                    case PipelineDeploymentEvent.DELETE_EXTENSION:
-                        deployer.delete(deployment);
-                        deployments.remove(deployment.getName());
-                        break;
-
-                    default:
-
-                }
-            }
-        }
-
-        try {
-            if (file.getParentFile().equals(deploymentDir)) {
-                FileUtils.forceDelete(file);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void onEvent(PipelineDeployEvent event) {
+        System.out.println("================= " + event.getPipeline());
     }
 
     static class DeploymentInitializer extends TimerTask {
@@ -129,11 +107,18 @@ public class PipelineDeploymentService implements ServiceEventListener<PipelineD
         public void run() {
             File[] files = base.listFiles();
             for (File file : files) {
-                PipelineServer.getInstance().publish(new PipelineDeploymentEvent(file));
+                String extension = Files.getFileExtension(file.getName());
+
+                PipelineServer.getInstance().publish(new PipelineDeployEvent(file.getName(), PipelineDeployEvent.DeployEventType.SUCCESS));
+
+                try {
+                    FileUtils.forceDelete(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
-
 
 
 }

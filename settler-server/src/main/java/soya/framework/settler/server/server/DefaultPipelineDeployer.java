@@ -108,6 +108,7 @@ public class DefaultPipelineDeployer implements PipelineDeployer {
     }
 
     protected void doStop(PipelineDeployment deployment) throws Exception {
+        System.out.println("========================= stop: " + deployment.getName());
 
     }
 
