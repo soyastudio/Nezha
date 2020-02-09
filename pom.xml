@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>soya.framework.settler</groupId>
-    <artifactId>Settler</artifactId>
+    <groupId>soya.framework.nezha</groupId>
+    <artifactId>Nezha</artifactId>
     <packaging>pom</packaging>
-    <name>Settler</name>
+    <name>Nezha</name>
     <version>1.0-SNAPSHOT</version>
     <url>https://github.com/</url>
 
@@ -145,9 +145,8 @@
     </dependencyManagement>
 
     <modules>
-        <module>settler-core</module>
-        <module>settler-server</module>
-        <module>settler-portal</module>
+        <module>nezha-ability</module>
+        <module>nezha-pipeline</module>
     </modules>
 
 </project>
