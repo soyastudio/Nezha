@@ -59,6 +59,7 @@ public class PipelineService implements ServiceEventListener<PipelineEvent> {
             currentEvents.remove(pipelineEvent.getPipeline());
 
         } else if (currentEvents.containsKey(pipelineEvent.getPipeline())) {
+
             while (currentEvents.containsKey(pipelineEvent.getPipeline())) {
                 PipelineEvent processing = currentEvents.get(pipelineEvent.getPipeline());
                 long timeToWait = processing.getCreatedTime() + processing.getTimeout() - System.currentTimeMillis();
