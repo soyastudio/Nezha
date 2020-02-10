@@ -147,6 +147,7 @@
     <modules>
         <module>nezha-ability</module>
         <module>nezha-pipeline</module>
+        <module>nezha-spring</module>
     </modules>
 
 </project>

@@ -1,0 +1,8 @@
+{
+  "group": "system",
+  "name": "heartbeat",
+  "description": "Heartbeat Job",
+  "jobClass": "soya.framework.nezha.pipeline.PipelineJob",
+  "interval": 1,
+  "unit": "MINUTES"
+}
