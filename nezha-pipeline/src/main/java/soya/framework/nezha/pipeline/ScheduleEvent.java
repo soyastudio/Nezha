@@ -2,7 +2,7 @@ package soya.framework.nezha.pipeline;
 
 import org.quartz.*;
 
-public class ScheduleEvent extends ServiceEvent {
+public class ScheduleEvent extends SchedulerEvent {
     private final JobDetail jobDetail;
     private final Trigger trigger;
 

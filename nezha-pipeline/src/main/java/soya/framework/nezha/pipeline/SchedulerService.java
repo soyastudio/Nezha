@@ -9,10 +9,9 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class SchedulerService implements ServiceEventListener<ScheduleEvent> {
+public class SchedulerService implements ServiceEventListener<SchedulerEvent> {
     private static Logger logger = LoggerFactory.getLogger(SchedulerService.class);
 
     private Scheduler scheduler;
@@ -59,14 +58,20 @@ public class SchedulerService implements ServiceEventListener<ScheduleEvent> {
     @PostConstruct
     public void init() {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("schedule.json");
-        if(inputStream != null) {
+        if (inputStream != null) {
             List<ScheduleEvent> scheduleEvents = ScheduleEventFactory.getInstance().fromJson(inputStream);
 
         }
     }
 
     @Subscribe
-    public void onEvent(ScheduleEvent event) {
+    public void onEvent(SchedulerEvent event) {
+        if (event instanceof ScheduleEvent) {
+            doSchedule((ScheduleEvent) event);
+        }
+    }
+
+    private void doSchedule(ScheduleEvent event) {
         try {
             scheduler.scheduleJob(event.getJobDetail(), event.getTrigger());
         } catch (SchedulerException e) {
