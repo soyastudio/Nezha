@@ -2,11 +2,13 @@ package soya.framework.nezha.pipeline;
 
 import com.google.common.eventbus.Subscribe;
 import org.quartz.*;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +29,31 @@ public class SchedulerService implements ServiceEventListener<ScheduleEvent> {
         return scheduler.getJobDetail(new JobKey(name, group));
     }
 
-    public List<JobExecutionContext> currentJobs() throws SchedulerException {
+    public List<JobExecutionContext> currentlyExecutingJobs() throws SchedulerException {
         return scheduler.getCurrentlyExecutingJobs();
+    }
+
+    public List<String> calendarNames() throws SchedulerException {
+        return scheduler.getCalendarNames();
+    }
+
+    public List<String> jobGroups() throws SchedulerException {
+        return scheduler.getJobGroupNames();
+    }
+
+    public List<JobDetail> jobs(String groupName) throws SchedulerException {
+        List<JobDetail> list = new ArrayList<>();
+        for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+            list.add(scheduler.getJobDetail(jobKey));
+        }
+        return list;
+    }
+
+    public JobSchedule jobSchedule(String jobName, String groupName) throws SchedulerException {
+        JobKey jobKey = new JobKey(jobName, groupName);
+        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+        List<Trigger> triggers = (List<Trigger>) scheduler.getTriggersOfJob(jobKey);
+        return new JobSchedule(jobDetail, triggers);
     }
 
     @PostConstruct
@@ -47,5 +72,17 @@ public class SchedulerService implements ServiceEventListener<ScheduleEvent> {
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
+    }
+
+    public static class JobSchedule {
+        private final JobDetail jobDetail;
+        private final List<Trigger> triggers;
+
+        private JobSchedule(JobDetail jobDetail, List<Trigger> triggers) {
+            this.jobDetail = jobDetail;
+            this.triggers = triggers;
+        }
+
+
     }
 }
