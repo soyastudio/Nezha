@@ -1,17 +1,23 @@
 package soya.framework.nezha.pipeline;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfoList;
+import io.github.classgraph.ScanResult;
 import soya.framework.nezha.ExternalContext;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
-public abstract class PipelineServer implements ExternalContext {
+public abstract class PipelineServer implements EventService, ExternalContext {
 
     private static PipelineServer instance;
 
@@ -19,6 +25,7 @@ public abstract class PipelineServer implements ExternalContext {
     private File home;
 
     private EventBus eventBus;
+    private Map<Class<? extends ServiceEvent>, Set<Class<? extends ServiceEventListener>> > eventTypes = new HashMap<>();
 
     protected PipelineServer() {
         try {
@@ -36,6 +43,15 @@ public abstract class PipelineServer implements ExternalContext {
     protected void init() throws URISyntaxException, IOException {
         this.serverName = name();
         this.eventBus = new EventBus(serverName);
+
+        ScanResult result = new ClassGraph().enableAllInfo()
+                .whitelistPackages(PipelineServer.class.getPackage().getName()).scan();
+        result.getSubclasses(ServiceEvent.class.getName()).forEach(e -> {
+            Class<?> ec = e.loadClass();
+            if(!Modifier.isAbstract(ec.getModifiers())) {
+                eventTypes.put((Class<? extends ServiceEvent>) ec, new HashSet<>());
+            }
+        });
 
         URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
         if ("jar".equalsIgnoreCase(url.getProtocol())) {
@@ -92,16 +108,45 @@ public abstract class PipelineServer implements ExternalContext {
         return home;
     }
 
+    public Set<Class<? extends ServiceEvent>> eventTypes() {
+        return ImmutableSet.copyOf(eventTypes.keySet());
+    }
+
+    public Set<Class<? extends ServiceEventListener>> listeners(Class<? extends ServiceEvent> eventType) {
+        return ImmutableSet.copyOf(eventTypes.get(eventType));
+    }
+
     public void publish(ServiceEvent event) {
         eventBus.post(event);
-        if(event instanceof TraceableEvent) {
+        if (event instanceof TraceableEvent) {
 
         }
     }
 
     protected void register(ServiceEventListener... listeners) {
-        for(ServiceEventListener listener: listeners) {
+        for (ServiceEventListener listener : listeners) {
             eventBus.register(listener);
+            try {
+                Method[] methods = listener.getClass().getDeclaredMethods();
+                for (Method method : methods) {
+                    if (method.getAnnotation(Subscribe.class) != null) {
+                        Class<?> paramType = method.getParameterTypes()[0];
+                        if (paramType != ServiceEvent.class) {
+                            Class<? extends ServiceEvent> eventType = (Class<? extends ServiceEvent>) paramType;
+
+                            eventTypes.entrySet().forEach(e -> {
+                                Class<?> key = e.getKey();
+                                if(eventType.isAssignableFrom(key)) {
+                                    e.getValue().add(listener.getClass());
+                                }
+                            });
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+
+            }
         }
     }
 

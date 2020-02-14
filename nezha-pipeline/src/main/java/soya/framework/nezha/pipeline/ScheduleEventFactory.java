@@ -10,6 +10,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -76,6 +77,20 @@ public class ScheduleEventFactory {
         return list;
     }
 
+    public  List<ScheduleEvent> fromJson(Reader reader) {
+        List<ScheduleEvent> list = new ArrayList<>();
+        JsonElement jsonElement = JsonParser.parseReader(reader);
+        if (jsonElement.isJsonObject()) {
+            list.add(fromJsonObject(jsonElement.getAsJsonObject()));
+
+        } else if (jsonElement.isJsonArray()) {
+            jsonElement.getAsJsonArray().forEach(e -> {
+                list.add(fromJsonObject(e.getAsJsonObject()));
+            });
+        }
+        return list;
+    }
+
     private ScheduleEvent fromJsonObject(JsonObject jsonObject) {
 
         Schedule schedule = gson.fromJson(jsonObject, Schedule.class);
@@ -85,38 +100,46 @@ public class ScheduleEventFactory {
                 .withDescription(schedule.description)
                 .build();
 
-        TriggerBuilder triggerBuilder = TriggerBuilder.newTrigger().forJob(jobDetail);
+        List<Trigger> triggers = new ArrayList<>();
+        for(TriggerConfig tc: schedule.triggers) {
+            TriggerBuilder triggerBuilder = TriggerBuilder.newTrigger()
+                    .forJob(jobDetail)
+                    .withIdentity(tc.name, tc.group)
+                    .withPriority(tc.priority)
+                    .startAt(tc.startTime)
+                    .endAt(tc.endTime);
 
-        if (schedule.cron != null) {
-            triggerBuilder.withSchedule(CronScheduleBuilder.cronSchedule(schedule.cron));
+            if (tc.cron != null) {
+                triggerBuilder.withSchedule(CronScheduleBuilder.cronSchedule(tc.cron));
 
-        } else if (schedule.interval != null) {
-            if (schedule.count == null) {
+            } else if (tc.interval != null) {
+                if (tc.count == null) {
 
-            } else {
-                switch (schedule.unit) {
-                    case DAYS:
-                        triggerBuilder.withSchedule(SimpleScheduleBuilder.repeatHourlyForever(24 * schedule.interval));
-                        break;
-                    case HOURS:
-                        triggerBuilder.withSchedule(SimpleScheduleBuilder.repeatHourlyForever(schedule.interval));
-                        break;
-                    case MINUTES:
-                        triggerBuilder.withSchedule(SimpleScheduleBuilder.repeatMinutelyForever(schedule.interval));
-                        break;
-                    case SECONDS:
-                        triggerBuilder.withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(schedule.interval));
-                        break;
-                    default:
-                        throw new IllegalStateException("TimeUnit '" + schedule.unit + "' is not supported.");
+                } else {
+                    switch (tc.unit) {
+                        case DAYS:
+                            triggerBuilder.withSchedule(SimpleScheduleBuilder.repeatHourlyForever(24 * tc.interval));
+                            break;
+                        case HOURS:
+                            triggerBuilder.withSchedule(SimpleScheduleBuilder.repeatHourlyForever(tc.interval));
+                            break;
+                        case MINUTES:
+                            triggerBuilder.withSchedule(SimpleScheduleBuilder.repeatMinutelyForever(tc.interval));
+                            break;
+                        case SECONDS:
+                            triggerBuilder.withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(tc.interval));
+                            break;
+                        default:
+                            throw new IllegalStateException("TimeUnit '" + tc.unit + "' is not supported.");
+                    }
                 }
+
             }
 
+            triggers.add(triggerBuilder.build());
         }
 
-        Trigger trigger = triggerBuilder.build();
-
-        return new ScheduleEvent(jobDetail, trigger);
+        return new ScheduleEvent(jobDetail, triggers);
     }
 
     public static List<ScheduleEvent> fromYaml(InputStream inputStream) {
@@ -124,7 +147,6 @@ public class ScheduleEventFactory {
     }
 
     static class XMLParser extends XMLSchedulingDataProcessor {
-
         public XMLParser() throws ParserConfigurationException {
             super(new SimpleClassLoadHelper());
         }
@@ -136,11 +158,23 @@ public class ScheduleEventFactory {
         private Class<? extends Job> jobClass;
         private String description;
 
+        private TriggerConfig[] triggers;
+
+    }
+
+    static class TriggerConfig {
+        private String group;
+        private String name;
+        private String description;
+        private int priority = 3;
+
+        private Date startTime;
+        private Date endTime;
+
         private Integer count;
         private Integer interval;
         private TimeUnit unit = TimeUnit.SECONDS;
 
         private String cron;
-
     }
 }

@@ -2,14 +2,23 @@ package soya.framework.nezha.pipeline;
 
 import org.quartz.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ScheduleEvent extends SchedulerEvent {
     private final JobDetail jobDetail;
-    private final Trigger trigger;
+    private final List<Trigger> triggers = new ArrayList<>();
 
     protected ScheduleEvent(JobDetail jobDetail, Trigger trigger) {
         super();
         this.jobDetail = jobDetail;
-        this.trigger = trigger;
+        this.triggers.add(trigger);
+    }
+
+    protected ScheduleEvent(JobDetail jobDetail, List<Trigger> triggers) {
+        super();
+        this.jobDetail = jobDetail;
+        this.triggers.addAll(triggers);
     }
 
     public ScheduleEvent(JobDetail jobDetail, int seconds) {
@@ -34,7 +43,7 @@ public class ScheduleEvent extends SchedulerEvent {
         return jobDetail;
     }
 
-    public Trigger getTrigger() {
-        return trigger;
+    public List<Trigger> getTriggers() {
+        return triggers;
     }
 }
