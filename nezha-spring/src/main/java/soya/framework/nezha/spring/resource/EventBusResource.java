@@ -2,9 +2,9 @@ package soya.framework.nezha.spring.resource;
 
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Component;
-import soya.framework.nezha.pipeline.PipelineServer;
-import soya.framework.nezha.pipeline.PipelineTriggerEvent;
-import soya.framework.nezha.pipeline.ServiceEvent;
+import soya.framework.pipeline.PipelineServer;
+import soya.framework.pipeline.PipelineTriggerEvent;
+import soya.framework.pipeline.ServiceEvent;
 import soya.framework.nezha.spring.model.EventModel;
 
 import javax.ws.rs.*;

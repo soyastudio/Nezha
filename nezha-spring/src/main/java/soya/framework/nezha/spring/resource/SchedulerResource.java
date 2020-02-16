@@ -8,7 +8,7 @@ import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import soya.framework.nezha.pipeline.SchedulerService;
+import soya.framework.pipeline.scheduler.SchedulerService;
 import soya.framework.nezha.spring.model.JobDetailModel;
 
 import javax.ws.rs.*;

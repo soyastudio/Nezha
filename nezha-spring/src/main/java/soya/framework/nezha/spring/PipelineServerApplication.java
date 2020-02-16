@@ -1,8 +1,5 @@
 package soya.framework.nezha.spring;
 
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfoList;
-import io.github.classgraph.ScanResult;
 import org.quartz.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +10,10 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
-import soya.framework.nezha.pipeline.*;
+import soya.framework.pipeline.*;
+import soya.framework.pipeline.deployment.PipelineDeployService;
+import soya.framework.pipeline.nezha.NezhaPipelineEngineRegister;
+import soya.framework.pipeline.scheduler.SchedulerService;
 
 @SpringBootApplication(scanBasePackages = {"soya.framework.nezha.spring"})
 public class PipelineServerApplication extends PipelineServer {
@@ -28,10 +28,17 @@ public class PipelineServerApplication extends PipelineServer {
     @EventListener(classes = {ApplicationReadyEvent.class})
     public void onApplicationEvent(ApplicationReadyEvent event) {
         this.applicationContext = event.getApplicationContext();
+        applicationContext.getBeansOfType(PipelineEngineRegister.class).entrySet().forEach(e -> {
+            register(e.getKey(), e.getValue());
+        });
+
         applicationContext.getBeansOfType(ServiceEventListener.class).values().forEach(e -> {
             logger.info("register event listener: {}", e.getClass().getName());
+            e.initialize();
             register(e);
         });
+
+        started();
     }
 
     @Override
@@ -45,13 +52,18 @@ public class PipelineServerApplication extends PipelineServer {
     }
 
     @Bean
-    PipelineDeployService pipelineDeploymentService() {
-        return new PipelineDeployService();
+    NezhaPipelineEngineRegister nezhaPipelineEngine() {
+        return new NezhaPipelineEngineRegister();
     }
 
     @Bean
-    PipelineLogService pipelineLogService() {
-        return new PipelineLogService();
+    SchedulerService scheduleService(@Autowired Scheduler scheduler) {
+        return new SchedulerService(scheduler);
+    }
+
+    @Bean
+    PipelineDeployService pipelineDeploymentService() {
+        return new PipelineDeployService();
     }
 
     @Bean
@@ -60,7 +72,7 @@ public class PipelineServerApplication extends PipelineServer {
     }
 
     @Bean
-    SchedulerService pipelineScheduleService(@Autowired Scheduler scheduler) {
-        return new SchedulerService(scheduler);
+    PipelineLogService pipelineLogService() {
+        return new PipelineLogService();
     }
 }

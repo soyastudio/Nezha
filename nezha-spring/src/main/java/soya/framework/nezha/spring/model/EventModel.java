@@ -1,6 +1,6 @@
 package soya.framework.nezha.spring.model;
 
-import soya.framework.nezha.pipeline.ServiceEventListener;
+import soya.framework.pipeline.ServiceEventListener;
 
 import java.util.List;
 

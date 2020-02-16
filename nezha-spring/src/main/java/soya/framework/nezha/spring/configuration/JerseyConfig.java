@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import soya.framework.nezha.spring.resource.DeployResource;
 import soya.framework.nezha.spring.resource.EventBusResource;
 import soya.framework.nezha.spring.resource.SchedulerResource;
-import soya.framework.nezha.spring.resource.ServerResource;
+import soya.framework.nezha.spring.resource.PipelineResource;
 
 import javax.ws.rs.ApplicationPath;
 
@@ -24,7 +24,7 @@ public class JerseyConfig extends ResourceConfig {
         register(EventBusResource.class);
         register(SchedulerResource.class);
         register(DeployResource.class);
-        register(ServerResource.class);
+        register(PipelineResource.class);
 
         swaggerConfig();
     }
