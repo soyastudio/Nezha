@@ -10,37 +10,27 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public final class CompositePipelineDeployer implements PipelineDeployer {
+public final class CompositePipelineDeployer {
 
+    private static PipelineDeployer defaultDeployer = new EmptyPipelineDeployer();
     private ImmutableSet<PipelineDeployer> deployers;
 
     private CompositePipelineDeployer(Set<PipelineDeployer> deployers) {
         this.deployers = ImmutableSet.copyOf(deployers);
     }
 
-    @Override
-    public File getPipelineFile(File dir) {
-        return null;
-    }
-
-    @Override
-    public Optional<Pipeline> deploy(PipelineDeployment deployment) {
-        return Optional.empty();
-    }
-
-    @Override
-    public void stop(PipelineDeployment deployment) {
-
-    }
-
     public PipelineDeployer getPipelineDeployer(File dir) {
         for (PipelineDeployer deployer : deployers) {
-            if (deployer.getPipelineFile(dir) != null) {
+            if (deployer.getPipelineFile(dir).isPresent()) {
                 return deployer;
             }
         }
 
         return new EmptyPipelineDeployer();
+    }
+
+    public static PipelineDeployer defaultDeployer() {
+        return defaultDeployer;
     }
 
     public static Builder builder() {
@@ -67,19 +57,13 @@ public final class CompositePipelineDeployer implements PipelineDeployer {
     public static class EmptyPipelineDeployer implements PipelineDeployer {
 
         @Override
-        public File getPipelineFile(File dir) {
-            return null;
+        public Optional<String> getPipelineFile(File dir) {
+            return Optional.empty();
         }
 
         @Override
         public Optional<Pipeline> deploy(PipelineDeployment deployment) {
             return Optional.empty();
-        }
-
-
-        @Override
-        public void stop(PipelineDeployment deployment) {
-
         }
     }
 }

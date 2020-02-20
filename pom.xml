@@ -147,6 +147,7 @@
     <modules>
         <module>nezha-ability</module>
         <module>nezha-pipeline</module>
+        <module>nezha-mermaid</module>
         <module>nezha-spring</module>
     </modules>
 

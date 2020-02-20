@@ -5,7 +5,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import soya.framework.nezha.FunctionNode;
-import soya.framework.pipeline.PipelineLogService;
+import soya.framework.pipeline.log.PipelineLogService;
 import soya.framework.pipeline.PipelineServer;
 import soya.framework.pipeline.PipelineService;
 import soya.framework.pipeline.PipelineTriggerEvent;

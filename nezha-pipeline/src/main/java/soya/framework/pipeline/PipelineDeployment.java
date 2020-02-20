@@ -10,15 +10,19 @@ import java.io.IOException;
 public class PipelineDeployment implements Comparable<PipelineDeployment> {
 
     private transient final File baseDir;
+    private transient PipelineDeployer<?> deployer;
 
     private String name;
-    private File configFile;
+    private String configureFile;
     private DeploymentState state;
 
-    public PipelineDeployment(File baseDir) {
+    public PipelineDeployment(File baseDir, PipelineDeployer<?> deployer) {
         this.baseDir = baseDir;
+        this.deployer = deployer;
 
         this.name = baseDir.getName();
+        this.configureFile = deployer.getPipelineFile(baseDir).get();
+
         this.state = DeploymentState.CREATED;
 
     }
@@ -27,12 +31,12 @@ public class PipelineDeployment implements Comparable<PipelineDeployment> {
         return baseDir;
     }
 
-    public File getConfigFile() {
-        return configFile;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public String getConfigureFile() {
+        return configureFile;
     }
 
     public DeploymentState getState() {

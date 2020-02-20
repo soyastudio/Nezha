@@ -1,4 +1,6 @@
-package soya.framework.pipeline;
+package soya.framework.pipeline.log;
+
+import soya.framework.pipeline.ServiceEvent;
 
 public class PipelineLogEvent extends ServiceEvent {
     private final String pipeline;

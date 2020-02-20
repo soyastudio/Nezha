@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import soya.framework.pipeline.*;
 import soya.framework.pipeline.deployment.PipelineDeployService;
+import soya.framework.pipeline.log.PipelineLogService;
 import soya.framework.pipeline.nezha.NezhaPipelineEngineRegister;
 import soya.framework.pipeline.scheduler.SchedulerService;
 

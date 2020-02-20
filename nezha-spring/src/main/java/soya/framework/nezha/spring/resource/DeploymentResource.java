@@ -9,18 +9,20 @@ import soya.framework.pipeline.PipelineServer;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Component
-@Path("/deploy")
-@Api(value = "Deploy Service")
-public class DeployResource {
+@Path("/deployment")
+@Api(value = "Deployment Service")
+public class DeploymentResource {
 
     @Autowired
     private PipelineDeployService deployService;
 
     @GET
-    @Path("/deployment")
+    @Path("/state")
+    @Produces({MediaType.APPLICATION_JSON})
     public Response deployment(@QueryParam("pipeline") @Nullable String pipeline) {
         Object result = null;
         if(pipeline != null) {
@@ -33,8 +35,9 @@ public class DeployResource {
     }
 
     @POST
-    @Path("/deployment/{pipeline}")
-    public Response deploy(@PathParam("pipeline") String pipeline) {
+    @Path("/edit/{pipeline}")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN})
+    public Response deploy(@PathParam("pipeline") String pipeline, String contents) {
         return Response.status(200).build();
     }
 

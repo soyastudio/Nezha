@@ -10,15 +10,15 @@ public class NezhaPipelineDeployer implements PipelineDeployer<NezhaPipeline> {
     private static final String[] paths = {"/pipeline.yaml", "/pipeline.json", "pipeline.xml"};
 
     @Override
-    public File getPipelineFile(File dir) {
-        for(String path : paths) {
+    public Optional<String> getPipelineFile(File dir) {
+        for (String path : paths) {
             File file = new File(dir, path);
-            if(file.exists() && file.isFile()) {
-                return file;
+            if (file.exists() && file.isFile()) {
+                return Optional.of(path);
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -26,8 +26,4 @@ public class NezhaPipelineDeployer implements PipelineDeployer<NezhaPipeline> {
         return Optional.empty();
     }
 
-    @Override
-    public void stop(PipelineDeployment deployment) {
-
-    }
 }

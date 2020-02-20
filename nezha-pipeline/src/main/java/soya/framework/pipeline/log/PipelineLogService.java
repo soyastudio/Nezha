@@ -1,9 +1,12 @@
-package soya.framework.pipeline;
+package soya.framework.pipeline.log;
 
 import com.google.common.eventbus.Subscribe;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import soya.framework.pipeline.PipelineServer;
+import soya.framework.pipeline.ServiceEventListener;
+import soya.framework.pipeline.ServiceExceptionEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +60,6 @@ public class PipelineLogService implements ServiceEventListener<PipelineLogEvent
         }
         reversedLinesFileReader.close();
         return builder.toString();
-
     }
 
     private void initPipelineLog(String pipeline) {

@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PipelineDeployService implements ServiceEventListener<PipelineDeployEvent> {
     private static final Logger logger = LoggerFactory.getLogger(PipelineDeployService.class);
 
-    private CompositePipelineDeployer deployer;
+    private CompositePipelineDeployer compositePipelineDeployer;
 
     private File pipelineHome;
     private File deploymentDir;
@@ -53,19 +53,16 @@ public class PipelineDeployService implements ServiceEventListener<PipelineDeplo
         PipelineServer.getInstance().getPipelineEngineRegistration().registers().forEachRemaining(e -> {
             deployBuilder.addPipelineDeployer(e.getValue().getDeployer());
         });
-        this.deployer = deployBuilder.build();
+        this.compositePipelineDeployer = deployBuilder.build();
 
         Timer timer = new Timer();
         File[] files = pipelineHome.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-                PipelineDeployer pipelineDeployer = deployer;
-                pipelineDeployer = deployer.getPipelineDeployer(file);
+                PipelineDeployer deployer = compositePipelineDeployer.getPipelineDeployer(file);
 
-                PipelineDeployment deployment = new PipelineDeployment(file);
+                PipelineDeployment deployment = new PipelineDeployment(file, deployer);
                 deployments.put(deployment.getName(), deployment);
-
-                System.out.println("===================== " + deployment.getName() + ": " + pipelineDeployer.getClass().getName());
 
                 Optional<Pipeline> opt = deployer.deploy(deployment);
                 if(opt.isPresent()) {

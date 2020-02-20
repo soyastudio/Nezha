@@ -24,6 +24,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>soya.framework.nezha</groupId>
+            <artifactId>nezha-mermaid</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- spring boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -6,10 +6,7 @@ import io.swagger.jaxrs.listing.SwaggerSerializers;
 import io.swagger.models.Swagger;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
-import soya.framework.nezha.spring.resource.DeployResource;
-import soya.framework.nezha.spring.resource.EventBusResource;
-import soya.framework.nezha.spring.resource.SchedulerResource;
-import soya.framework.nezha.spring.resource.PipelineResource;
+import soya.framework.nezha.spring.resource.*;
 
 import javax.ws.rs.ApplicationPath;
 
@@ -23,8 +20,10 @@ public class JerseyConfig extends ResourceConfig {
 
         register(EventBusResource.class);
         register(SchedulerResource.class);
-        register(DeployResource.class);
+        register(DeploymentResource.class);
         register(PipelineResource.class);
+
+        register(MermaidResource.class);
 
         swaggerConfig();
     }
