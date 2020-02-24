@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project name="BOD Installation" default="init" basedir="">
+    <property file="installation.properties"/>
+    <property file="business-object-definition.properties"/>
+
+    <property name="bod.base.dir" location="Retail Store"/>
+    <property name="template.dir" location="_template"/>
+
+    <target name="init">
+        <mkdir dir="/install/repository/Retail Store"/>
+
+        <!-- business-object-definition -->
+        <copy todir="/install/repository/Retail Store" file="/install/repository/_template/business-object-definition.properties"/>
+        <replace file="/install/repository/Retail Store/business-object-definition.properties">
+            <replacefilter token="{{PROJECT_NAME}}" value="${project.name}"/>
+        </replace>
+
+        <!-- build file -->
+        <copy todir="/install/repository/Retail Store" file="/install/repository/_template/build.xml"/>
+        <replace file="/install/repository/Retail Store/build.xml">
+            <replacefilter token="{{PROJECT_NAME}}" value="${project.name}"/>
+        </replace>
+
+        <echoproperties>
+            <propertyset>
+                <propertyref prefix="bod."/>
+            </propertyset>
+        </echoproperties>
+    </target>
+
+    <target name="install" depends="init">
+        <copy todir="/install/repository/Retail Store" file="business-object-definition.properties" overwrite="true"/>
+        <ant dir="/install/repository/Retail Store"/>
+    </target>
+
+</project>

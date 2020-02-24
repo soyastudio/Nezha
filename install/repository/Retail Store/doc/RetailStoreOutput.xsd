@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://collab.safeway.com/it/architecture/info/default.aspx" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="AlternateDocumentID" type="xs:string"/>
+  <xs:element name="InboundOutboundInd" type="xs:string"/>
+  <xs:element name="DocumentNm" type="xs:string"/>
+  <xs:element name="CreationDt" type="xs:string"/>
+  <xs:element name="SourceApplicationCd" type="xs:string"/>
+  <xs:element name="TargetApplicationCd" type="xs:string"/>
+  <xs:element name="GatewayNm" type="xs:string"/>
+  <xs:element name="ActionTypeCd" type="xs:string"/>
+  <xs:element name="RecordTypeCd" type="xs:string"/>
+  <xs:element name="Corporation" type="def:CorporationType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="Division" type="def:DivisionType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="ReportingDivision" type="def:ReportingDivisionType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="OperatingArea" type="def:OperatingAreaType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="ParentOperatingArea" type="def:ParentOperatingAreaType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="District" type="def:DistrictType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="Banner" type="def:BannerType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="RetailOrderGroup" type="def:RetailOrderGroupType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="StoreData" type="def:StoreDataType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="StoreAddressData" type="def:StoreAddressDataType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="StoreDepartmentData" type="def:StoreDepartmentDataType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="StoreDepartmentSectionType" type="def:StoreDepartmentSectionTypeType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="StoreHoursData" type="def:StoreHoursDataType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="StoreHolidayHours" type="def:StoreHolidayHoursType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:element name="StoreCheckStandData" type="def:StoreCheckStandDataType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+  <xs:complexType name="CorporationType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="CorporationId"/>
+      <xs:element type="xs:string" name="CorporationNm"/>
+      <xs:element type="xs:string" name="InCorporationCountryCd"/>
+      <xs:element type="xs:string" name="InCorporationDt"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DivisionType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="DivisionId"/>
+      <xs:element type="xs:string" name="DivisionNm"/>
+      <xs:element type="xs:string" name="AdminDivisionInd"/>
+      <xs:element type="xs:string" name="BusinessTypeCd"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ReportingDivisionType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="DivisionId"/>
+      <xs:element type="xs:string" name="DivisionNm"/>
+      <xs:element type="xs:string" name="AdminDivisionInd"/>
+      <xs:element type="xs:string" name="BusinessTypeCd"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OperatingAreaType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="DivisionId"/>
+      <xs:element type="xs:string" name="OperatingAreaId"/>
+      <xs:element type="xs:string" name="OperatingAreaNbr"/>
+      <xs:element type="xs:string" name="OperatingAreaNm"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ParentOperatingAreaType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="DivisionId"/>
+      <xs:element type="xs:string" name="OperatingAreaId"/>
+      <xs:element type="xs:string" name="OperatingAreaNbr"/>
+      <xs:element type="xs:string" name="OperatingAreaNm"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DistrictType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="DivisionId"/>
+      <xs:element type="xs:string" name="DistrictNm"/>
+      <xs:element type="xs:string" name="DistrictCd"/>
+      <xs:element type="xs:string" name="DistrictManagerNm"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BannerType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="BannerCd"/>
+      <xs:element type="xs:string" name="BannerNm"/>
+      <xs:element type="xs:string" name="ParentBannerCd"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RetailOrderGroupType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="DivisionId"/>
+      <xs:element type="xs:string" name="RogId"/>
+      <xs:element type="xs:string" name="RogNm"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StoreDataType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="RetailStoreId"/>
+      <xs:element type="xs:string" name="FirstEffectiveDt"/>
+      <xs:element type="xs:string" name="LastEffectiveDt"/>
+      <xs:element type="xs:string" name="RetailFacilityTypeCd"/>
+      <xs:element type="xs:string" name="FacilitySubTypeCd"/>
+      <xs:element type="xs:string" name="StoreNm"/>
+      <xs:element type="xs:string" name="AltStoreId"/>
+      <xs:element type="xs:string" name="StoreBannerCd"/>
+      <xs:element type="xs:string" name="StoreManagerNm"/>
+      <xs:element type="xs:string" name="ParkingSpacesCnt"/>
+      <xs:element type="xs:string" name="StoreAreaSFTNbr"/>
+      <xs:element type="xs:string" name="SalesAreainSFTNbr"/>
+      <xs:element type="xs:string" name="DisplayAreainSFTNbr"/>
+      <xs:element type="xs:string" name="StoreFormatTypeCd"/>
+      <xs:element type="xs:string" name="StoreOpenDt"/>
+      <xs:element type="xs:string" name="StoreFirstOpenDt"/>
+      <xs:element type="xs:string" name="StoreCloseDt"/>
+      <xs:element type="xs:string" name="StoreCloseAnnouncedDt"/>
+      <xs:element type="xs:string" name="StoreCurrentStatusCd"/>
+      <xs:element type="xs:string" name="TierCompanyCd"/>
+      <xs:element type="xs:string" name="StorePhoneNbr"/>
+      <xs:element type="xs:string" name="FileMaintenanceDt"/>
+      <xs:element type="xs:string" name="FileMaintenanceUserId"/>
+      <xs:element type="xs:string" name="LastDecorationDt"/>
+      <xs:element type="xs:string" name="LastDecorationTypeCd"/>
+      <xs:element type="xs:string" name="ReplacedStoreId"/>
+      <xs:element type="xs:string" name="ReplacedCorporationId"/>
+      <xs:element type="xs:string" name="ReplacedDivisionId"/>
+      <xs:element type="xs:string" name="ScanEquipmentVendorCd"/>
+      <xs:element type="xs:string" name="AcquiredFromNm"/>
+      <xs:element type="xs:string" name="AcquiredDt"/>
+      <xs:element type="xs:string" name="TempCloseStartDt"/>
+      <xs:element type="xs:string" name="TempCloseEndDt"/>
+      <xs:element type="xs:string" name="UpgradeClassCd"/>
+      <xs:element type="xs:string" name="LastDecorationCostAmt"/>
+      <xs:element type="xs:string" name="OrderStartDt"/>
+      <xs:element type="xs:string" name="OrderEndDt"/>
+      <xs:element type="xs:string" name="OrderTempStopStartDt"/>
+      <xs:element type="xs:string" name="OrderTempStopEndDt"/>
+      <xs:element type="xs:string" name="TobaccoLicenseNbr"/>
+      <xs:element type="xs:string" name="MilkAreaCd"/>
+      <xs:element type="xs:string" name="FinancialServicesInd"/>
+      <xs:element type="xs:string" name="PayrollUnitCd"/>
+      <xs:element type="xs:string" name="AuthorizedHeadCountNbr"/>
+      <xs:element type="xs:string" name="ManagerUserId"/>
+      <xs:element type="xs:string" name="ManagerEmployeeId"/>
+      <xs:element type="xs:string" name="SeaSectionCd"/>
+      <xs:element type="xs:string" name="SeaSubsectionCd"/>
+      <xs:element type="xs:string" name="TimeAndAttendanceSystemInd"/>
+      <xs:element type="xs:string" name="TimeClockFormatCd"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StoreAddressDataType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="AddressLine1txt"/>
+      <xs:element type="xs:string" name="AddressLine2txt"/>
+      <xs:element type="xs:string" name="CityNm"/>
+      <xs:element type="xs:string" name="CountyNm"/>
+      <xs:element type="xs:string" name="PostalZoneCd"/>
+      <xs:element type="xs:string" name="StateCd"/>
+      <xs:element type="xs:string" name="CountryCd"/>
+      <xs:element type="xs:string" name="PhoneNbr"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DepartmentHoursType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="StoreDepartmentId"/>
+      <xs:element name="WeekDay">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Sunday"/>
+            <xs:enumeration value="Monday"/>
+            <xs:enumeration value="Tuesday"/>
+            <xs:enumeration value="Wednesday"/>
+            <xs:enumeration value="Thrusday"/>
+            <xs:enumeration value="Friday"/>
+            <xs:enumeration value="Saturday"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="OpenHr">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="10:00"/>
+            <xs:enumeration value="9:00"/>
+            <xs:enumeration value="0:00"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="CloseHr">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="16:00"/>
+            <xs:enumeration value="20:00"/>
+            <xs:enumeration value="17:00"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HolidayScheduleTypeType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description"/>
+      <xs:element type="xs:string" name="ClosedInd"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DepartmentHolidayHoursType">
+    <xs:sequence>
+      <xs:element name="HolidayDate">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="2019-11-27"/>
+            <xs:enumeration value="2019-11-28"/>
+            <xs:enumeration value="2019-11-29"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="HolidayOpenHr">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="7:00"/>
+            <xs:enumeration value="0:00"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="HolidayCloseHr">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="23:00"/>
+            <xs:enumeration value="16:00"/>
+            <xs:enumeration value="00:00"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="def:HolidayScheduleTypeType" name="HolidayScheduleType" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StoreDepartmentDataType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="RetailStoreId"/>
+      <xs:element type="xs:string" name="DepartmentId"/>
+      <xs:element name="FirstEffectiveDt">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1978-06-11"/>
+            <xs:enumeration value="2001-12-30"/>
+            <xs:enumeration value="2002-10-06"/>
+            <xs:enumeration value="2018-03-25"/>
+            <xs:enumeration value="2006-01-01"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:string" name="LastEffectiveDt"/>
+      <xs:element name="SalesAreaSFTNbr">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="22840"/>
+            <xs:enumeration value="0"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:string" name="ShelfUnitCnt"/>
+      <xs:element type="xs:string" name="DisplayAreaSFTNbr"/>
+      <xs:element type="xs:string" name="AddressLineTxt"/>
+      <xs:element type="def:DepartmentHoursType" name="DepartmentHours" maxOccurs="unbounded" minOccurs="0" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element type="def:DepartmentHolidayHoursType" name="DepartmentHolidayHours" maxOccurs="unbounded" minOccurs="0" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PriceAreaType">
+    <xs:sequence>
+      <xs:element name="Code">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="02"/>
+            <xs:enumeration value="61"/>
+            <xs:enumeration value="01"/>
+            <xs:enumeration value="29"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SectionType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="SectionCd"/>
+      <xs:element type="xs:string" name="SectionNm"/>
+      <xs:element type="def:PriceAreaType" name="PriceArea" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StoreDepartmentSectionTypeType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="RetailStoreId"/>
+      <xs:element type="xs:string" name="DepartmentId"/>
+      <xs:element name="FirstEffectiveDt">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1978-06-11"/>
+            <xs:enumeration value="2001-12-30"/>
+            <xs:enumeration value="2002-10-06"/>
+            <xs:enumeration value="2018-03-25"/>
+            <xs:enumeration value="2006-01-01"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:string" name="LastEffectiveDt"/>
+      <xs:element type="def:SectionType" name="Section" maxOccurs="unbounded" minOccurs="0" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StoreHoursDataType">
+    <xs:sequence>
+      <xs:element name="WeekDay">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Sunday"/>
+            <xs:enumeration value="Monday"/>
+            <xs:enumeration value="Tuesday"/>
+            <xs:enumeration value="Wednesday"/>
+            <xs:enumeration value="Thrusday"/>
+            <xs:enumeration value="Friday"/>
+            <xs:enumeration value="Saturday"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="OpenHr">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="9:00"/>
+            <xs:enumeration value="0:00"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="CloseHr">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="16:00"/>
+            <xs:enumeration value="20:00"/>
+            <xs:enumeration value="17:00"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StoreHolidayHoursType">
+    <xs:sequence>
+      <xs:element name="HolidayDt">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="2019-11-27"/>
+            <xs:enumeration value="2019-11-28"/>
+            <xs:enumeration value="2019-11-29"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="HolidayOpenHr">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="7:00"/>
+            <xs:enumeration value="0:00"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="HolidayCloseHr">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="23:00"/>
+            <xs:enumeration value="16:00"/>
+            <xs:enumeration value="00:00"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:string" name="Description"/>
+      <xs:element name="ClosedInd">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="N"/>
+            <xs:enumeration value="Y"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StoreCheckStandDataType">
+    <xs:sequence>
+      <xs:element name="CheckStandTypeCd">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="EXP1"/>
+            <xs:enumeration value="EXP2"/>
+            <xs:enumeration value="REG1"/>
+            <xs:enumeration value="REG2"/>
+            <xs:enumeration value="REM1"/>
+            <xs:enumeration value="REM2"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="CheckStandCnt">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="3"/>
+            <xs:enumeration value="0"/>
+            <xs:enumeration value="4"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:string" name="CheckStandModelCd"/>
+      <xs:element name="CheckStandScanLevelCd">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="S"/>
+            <xs:enumeration value=""/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

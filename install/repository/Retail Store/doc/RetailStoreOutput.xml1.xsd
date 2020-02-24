@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="GetRetailStore" type="GetRetailStoreType"/>
+  <xs:complexType name="DocumentType">
+    <xs:sequence>
+      <xs:element ref="def:AlternateDocumentID" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:InboundOutboundInd" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:DocumentNm" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:CreationDt" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:SourceApplicationCd" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:TargetApplicationCd" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:GatewayNm" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="ReleaseId"/>
+    <xs:attribute type="xs:string" name="VersionId"/>
+    <xs:attribute type="xs:string" name="SystemEnvironmentCd"/>
+  </xs:complexType>
+  <xs:complexType name="DocumentActionType">
+    <xs:sequence>
+      <xs:element ref="def:ActionTypeCd" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:RecordTypeCd" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentDataType">
+    <xs:sequence>
+      <xs:element type="DocumentType" name="Document"/>
+      <xs:element type="DocumentActionType" name="DocumentAction"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RetailStoreDataType">
+    <xs:sequence>
+      <xs:element ref="def:Corporation" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:Division" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:ReportingDivision" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:OperatingArea" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:ParentOperatingArea" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:District" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:Banner" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:RetailOrderGroup" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:StoreData" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:StoreAddressData" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:StoreDepartmentData" maxOccurs="unbounded" minOccurs="0" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:StoreDepartmentSectionType" maxOccurs="unbounded" minOccurs="0" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:StoreHoursData" maxOccurs="unbounded" minOccurs="0" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:StoreHolidayHours" maxOccurs="unbounded" minOccurs="0" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+      <xs:element ref="def:StoreCheckStandData" maxOccurs="unbounded" minOccurs="0" xmlns:def="http://collab.safeway.com/it/architecture/info/default.aspx"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetRetailStoreType">
+    <xs:sequence>
+      <xs:element type="DocumentDataType" name="DocumentData"/>
+      <xs:element type="RetailStoreDataType" name="RetailStoreData"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

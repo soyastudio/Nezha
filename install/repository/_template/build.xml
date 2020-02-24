@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<project name="{{PROJECT_NAME}}" default="init" basedir="">
+    <property file="business-object-definition.properties"/>
+
+    <property name="template.dir" location=""/>
+    <property name="doc.dir" location="doc"/>
+
+    <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+        <classpath>
+            <fileset dir="../lib" includes="*.jar" />
+        </classpath>
+    </taskdef>
+
+    <target name="init">
+        <echo message="Project Name: ${ant.project.name}"/>
+        <echo message="========== Business Object Settings =========="/>
+
+        <echoproperties>
+            <propertyset>
+                <propertyref prefix="bod."/>
+            </propertyset>
+        </echoproperties>
+
+        <echo message=""/>
+        <echo message=""/>
+
+        <!-- README -->
+        <delete file="README.md"/>
+        <copy todir="" file="/install/repository/_template/README.md"/>
+        <replace file="README.md">
+            <replacefilter token="{{BOD_NAME}}" value="${bod.name}"/>
+            <replacefilter token="{{PROJECT_ID}}" value="${bod.project.id}"/>
+            <replacefilter token="{{PROJECT_VERSION}}" value="${bod.project.version}"/>
+            <replacefilter token="{{TEMPLATE_VERSION}}" value="${bod.template.version}"/>
+            <replacefilter token="{{BORD_AUTHOR}}" value="${bod.bord.author}"/>
+        </replace>
+
+        <mkdir dir="${doc.dir}"/>
+
+        <!-- BORD -->
+        <delete file="${doc.dir}/BORD.md"/>
+        <copy todir="${doc.dir}" file="/install/repository/_template/BORD.md"/>
+        <replace file="${doc.dir}/BORD.md">
+            <replacefilter token="{{BOD_NAME}}" value="${bod.name}"/>
+            <replacefilter token="{{BORD_CREATED_TIME}}" value="${bod.bord.created_time}"/>
+            <replacefilter token="{{PROJECT_ID}}" value="${bod.project.id}"/>
+            <replacefilter token="{{PROJECT_VERSION}}" value="${bod.project.version}"/>
+            <replacefilter token="{{TEMPLATE_VERSION}}" value="${bod.template.version}"/>
+            <replacefilter token="{{BORD_AUTHOR}}" value="${bod.bord.author}"/>
+        </replace>
+
+        <!-- BODD -->
+        <delete file="${doc.dir}/BODD.md"/>
+        <copy todir="${doc.dir}" file="/install/repository/_template/BODD.md"/>
+        <replace file="${doc.dir}/BODD.md">
+            <replacefilter token="{{BOD_NAME}}" value="${bod.name}"/>
+            <replacefilter token="{{BODD_AUTHOR}}" value="${bod.bodd.author}"/>
+            <replacefilter token="{{BODD_CREATED_TIME}}" value="${bod.bodd.created_time}"/>
+            <replacefilter token="{{PROJECT_ID}}" value="${bod.project.id}"/>
+            <replacefilter token="{{PROJECT_VERSION}}" value="${bod.project.version}"/>
+            <replacefilter token="{{TEMPLATE_VERSION}}" value="${bod.template.version}"/>
+        </replace>
+    </target>
+
+    <target name="xjc">
+        <xjc destdir="src" extension="true" >
+            <schema dir="doc" includes="CMM.xsd"/>
+        </xjc>
+    </target>
+</project>

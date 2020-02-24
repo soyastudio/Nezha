@@ -1,0 +1,258 @@
+CREATE COMPUTE MODULE Retail_Store_Transformer
+
+    CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CREATE LASTCHILD OF OutputRoot DOMAIN 'XMLNSC';
+
+		-- Declare Variables for Input Message
+		DECLARE row REFERENCE TO InputRoot.ROW;
+
+		-- Declare Variables for Output Message
+		DECLARE retailStoreData REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData;
+		DECLARE corporation REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.Corporation;
+		DECLARE division REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.Division;
+		DECLARE reportingDivision REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.ReportingDivision;
+		DECLARE operatingArea REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.OperatingArea;
+		DECLARE parentOperatingArea REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.ParentOperatingArea;
+		DECLARE district REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.District;
+		DECLARE banner REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.Banner;
+		DECLARE retailOrderGroup REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.RetailOrderGroup;
+		DECLARE storeData REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreData;
+		DECLARE lastDecorationTypeCd REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreData.LastDecorationTypeCd;
+		DECLARE replacedStoreId REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreData.ReplacedStoreId;
+		DECLARE replacedCorporationId REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreData.ReplacedCorporationId;
+		DECLARE replacedDivisionId REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreData.ReplacedDivisionId;
+		DECLARE upgradeClassCd REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreData.UpgradeClassCd;
+		DECLARE tobaccoLicenseNbr REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreData.TobaccoLicenseNbr;
+		DECLARE financialServicesInd REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreData.FinancialServicesInd;
+		DECLARE seaSubsectionCd REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreData.SeaSubsectionCd;
+		DECLARE timeClockFormatCd REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreData.TimeClockFormatCd;
+		DECLARE storeAddressData REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreAddressData;
+		DECLARE addressLine2txt REFERENCE TO OutputRoot.XMLNSC.GetRetailStore.RetailStoreData.StoreAddressData.AddressLine2txt;
+
+		-- Main Item Mapping
+		WHILE LASTMOVE(row) DO
+			CREATE LASTCHILD OF OutputRoot.XMLNSC AS retailStoreData TYPE XMLNSC.Folder NAME 'RetailStoreData';
+
+			-- Generate Node Corporation
+			CREATE LASTCHILD OF retailStoreData AS corporation TYPE XMLNSC.Folder NAME 'Corporation';
+			-- Set Field CorporationId
+			SET corporation.(XMLNSC.FIELD)CorporationId = {{CorporationId}}
+			-- Set Field CorporationNm
+			SET corporation.(XMLNSC.FIELD)CorporationNm = {{CorporationNm}}
+			-- Set Field InCorporationCountryCd
+			SET corporation.(XMLNSC.FIELD)InCorporationCountryCd = {{InCorporationCountryCd}}
+			-- Set Field InCorporationDt
+			SET corporation.(XMLNSC.FIELD)InCorporationDt = {{InCorporationDt}}
+
+			-- Generate Node Division
+			CREATE LASTCHILD OF retailStoreData AS division TYPE XMLNSC.Folder NAME 'Division';
+			-- Set Field DivisionId
+			SET division.(XMLNSC.FIELD)DivisionId = {{DivisionId}}
+			-- Set Field DivisionNm
+			SET division.(XMLNSC.FIELD)DivisionNm = {{DivisionNm}}
+			-- Set Field AdminDivisionInd
+			SET division.(XMLNSC.FIELD)AdminDivisionInd = {{AdminDivisionInd}}
+			-- Set Field BusinessTypeCd
+			SET division.(XMLNSC.FIELD)BusinessTypeCd = {{BusinessTypeCd}}
+
+			-- Generate Node ReportingDivision
+			CREATE LASTCHILD OF retailStoreData AS reportingDivision TYPE XMLNSC.Folder NAME 'ReportingDivision';
+			-- Set Field DivisionId
+			SET reportingDivision.(XMLNSC.FIELD)DivisionId = {{DivisionId}}
+			-- Set Field DivisionNm
+			SET reportingDivision.(XMLNSC.FIELD)DivisionNm = {{DivisionNm}}
+			-- Set Field AdminDivisionInd
+			SET reportingDivision.(XMLNSC.FIELD)AdminDivisionInd = {{AdminDivisionInd}}
+			-- Set Field BusinessTypeCd
+			SET reportingDivision.(XMLNSC.FIELD)BusinessTypeCd = {{BusinessTypeCd}}
+
+			-- Generate Node OperatingArea
+			CREATE LASTCHILD OF retailStoreData AS operatingArea TYPE XMLNSC.Folder NAME 'OperatingArea';
+			-- Set Field DivisionId
+			SET operatingArea.(XMLNSC.FIELD)DivisionId = {{DivisionId}}
+			-- Set Field OperatingAreaId
+			SET operatingArea.(XMLNSC.FIELD)OperatingAreaId = {{OperatingAreaId}}
+			-- Set Field OperatingAreaNbr
+			SET operatingArea.(XMLNSC.FIELD)OperatingAreaNbr = {{OperatingAreaNbr}}
+			-- Set Field OperatingAreaNm
+			SET operatingArea.(XMLNSC.FIELD)OperatingAreaNm = {{OperatingAreaNm}}
+
+			-- Generate Node ParentOperatingArea
+			CREATE LASTCHILD OF retailStoreData AS parentOperatingArea TYPE XMLNSC.Folder NAME 'ParentOperatingArea';
+			-- Set Field DivisionId
+			SET parentOperatingArea.(XMLNSC.FIELD)DivisionId = {{DivisionId}}
+			-- Set Field OperatingAreaId
+			SET parentOperatingArea.(XMLNSC.FIELD)OperatingAreaId = {{OperatingAreaId}}
+			-- Set Field OperatingAreaNbr
+			SET parentOperatingArea.(XMLNSC.FIELD)OperatingAreaNbr = {{OperatingAreaNbr}}
+			-- Set Field OperatingAreaNm
+			SET parentOperatingArea.(XMLNSC.FIELD)OperatingAreaNm = {{OperatingAreaNm}}
+
+			-- Generate Node District
+			CREATE LASTCHILD OF retailStoreData AS district TYPE XMLNSC.Folder NAME 'District';
+			-- Set Field DivisionId
+			SET district.(XMLNSC.FIELD)DivisionId = {{DivisionId}}
+			-- Set Field DistrictNm
+			SET district.(XMLNSC.FIELD)DistrictNm = {{DistrictNm}}
+			-- Set Field DistrictCd
+			SET district.(XMLNSC.FIELD)DistrictCd = {{DistrictCd}}
+			-- Set Field DistrictManagerNm
+			SET district.(XMLNSC.FIELD)DistrictManagerNm = {{DistrictManagerNm}}
+
+			-- Generate Node Banner
+			CREATE LASTCHILD OF retailStoreData AS banner TYPE XMLNSC.Folder NAME 'Banner';
+			-- Set Field BannerCd
+			SET banner.(XMLNSC.FIELD)BannerCd = {{BannerCd}}
+			-- Set Field BannerNm
+			SET banner.(XMLNSC.FIELD)BannerNm = {{BannerNm}}
+			-- Set Field ParentBannerCd
+			SET banner.(XMLNSC.FIELD)ParentBannerCd = {{ParentBannerCd}}
+
+			-- Generate Node RetailOrderGroup
+			CREATE LASTCHILD OF retailStoreData AS retailOrderGroup TYPE XMLNSC.Folder NAME 'RetailOrderGroup';
+			-- Set Field DivisionId
+			SET retailOrderGroup.(XMLNSC.FIELD)DivisionId = {{DivisionId}}
+			-- Set Field RogId
+			SET retailOrderGroup.(XMLNSC.FIELD)RogId = {{RogId}}
+			-- Set Field RogNm
+			SET retailOrderGroup.(XMLNSC.FIELD)RogNm = {{RogNm}}
+
+			-- Generate Node StoreData
+			CREATE LASTCHILD OF retailStoreData AS storeData TYPE XMLNSC.Folder NAME 'StoreData';
+			-- Set Field RetailStoreId
+			SET storeData.(XMLNSC.FIELD)RetailStoreId = {{RetailStoreId}}
+			-- Set Field FirstEffectiveDt
+			SET storeData.(XMLNSC.FIELD)FirstEffectiveDt = {{FirstEffectiveDt}}
+			-- Set Field LastEffectiveDt
+			SET storeData.(XMLNSC.FIELD)LastEffectiveDt = {{LastEffectiveDt}}
+			-- Set Field RetailFacilityTypeCd
+			SET storeData.(XMLNSC.FIELD)RetailFacilityTypeCd = {{RetailFacilityTypeCd}}
+			-- Set Field FacilitySubTypeCd
+			SET storeData.(XMLNSC.FIELD)FacilitySubTypeCd = {{FacilitySubTypeCd}}
+			-- Set Field StoreNm
+			SET storeData.(XMLNSC.FIELD)StoreNm = {{StoreNm}}
+			-- Set Field AltStoreId
+			SET storeData.(XMLNSC.FIELD)AltStoreId = {{AltStoreId}}
+			-- Set Field StoreBannerCd
+			SET storeData.(XMLNSC.FIELD)StoreBannerCd = {{StoreBannerCd}}
+			-- Set Field StoreManagerNm
+			SET storeData.(XMLNSC.FIELD)StoreManagerNm = {{StoreManagerNm}}
+			-- Set Field ParkingSpacesCnt
+			SET storeData.(XMLNSC.FIELD)ParkingSpacesCnt = {{ParkingSpacesCnt}}
+			-- Set Field StoreAreaSFTNbr
+			SET storeData.(XMLNSC.FIELD)StoreAreaSFTNbr = {{StoreAreaSFTNbr}}
+			-- Set Field SalesAreainSFTNbr
+			SET storeData.(XMLNSC.FIELD)SalesAreainSFTNbr = {{SalesAreainSFTNbr}}
+			-- Set Field DisplayAreainSFTNbr
+			SET storeData.(XMLNSC.FIELD)DisplayAreainSFTNbr = {{DisplayAreainSFTNbr}}
+			-- Set Field StoreFormatTypeCd
+			SET storeData.(XMLNSC.FIELD)StoreFormatTypeCd = {{StoreFormatTypeCd}}
+			-- Set Field StoreOpenDt
+			SET storeData.(XMLNSC.FIELD)StoreOpenDt = {{StoreOpenDt}}
+			-- Set Field StoreFirstOpenDt
+			SET storeData.(XMLNSC.FIELD)StoreFirstOpenDt = {{StoreFirstOpenDt}}
+			-- Set Field StoreCloseDt
+			SET storeData.(XMLNSC.FIELD)StoreCloseDt = {{StoreCloseDt}}
+			-- Set Field StoreCloseAnnouncedDt
+			SET storeData.(XMLNSC.FIELD)StoreCloseAnnouncedDt = {{StoreCloseAnnouncedDt}}
+			-- Set Field StoreCurrentStatusCd
+			SET storeData.(XMLNSC.FIELD)StoreCurrentStatusCd = {{StoreCurrentStatusCd}}
+			-- Set Field TierCompanyCd
+			SET storeData.(XMLNSC.FIELD)TierCompanyCd = {{TierCompanyCd}}
+			-- Set Field StorePhoneNbr
+			SET storeData.(XMLNSC.FIELD)StorePhoneNbr = {{StorePhoneNbr}}
+			-- Set Field FileMaintenanceDt
+			SET storeData.(XMLNSC.FIELD)FileMaintenanceDt = {{FileMaintenanceDt}}
+			-- Set Field FileMaintenanceUserId
+			SET storeData.(XMLNSC.FIELD)FileMaintenanceUserId = {{FileMaintenanceUserId}}
+			-- Set Field LastDecorationDt
+			SET storeData.(XMLNSC.FIELD)LastDecorationDt = {{LastDecorationDt}}
+				-- Generate Node LastDecorationTypeCd
+				CREATE LASTCHILD OF storeData AS lastDecorationTypeCd TYPE XMLNSC.Folder NAME 'LastDecorationTypeCd';
+
+				-- Generate Node ReplacedStoreId
+				CREATE LASTCHILD OF storeData AS replacedStoreId TYPE XMLNSC.Folder NAME 'ReplacedStoreId';
+
+				-- Generate Node ReplacedCorporationId
+				CREATE LASTCHILD OF storeData AS replacedCorporationId TYPE XMLNSC.Folder NAME 'ReplacedCorporationId';
+
+				-- Generate Node ReplacedDivisionId
+				CREATE LASTCHILD OF storeData AS replacedDivisionId TYPE XMLNSC.Folder NAME 'ReplacedDivisionId';
+
+			-- Set Field ScanEquipmentVendorCd
+			SET storeData.(XMLNSC.FIELD)ScanEquipmentVendorCd = {{ScanEquipmentVendorCd}}
+			-- Set Field AcquiredFromNm
+			SET storeData.(XMLNSC.FIELD)AcquiredFromNm = {{AcquiredFromNm}}
+			-- Set Field AcquiredDt
+			SET storeData.(XMLNSC.FIELD)AcquiredDt = {{AcquiredDt}}
+			-- Set Field TempCloseStartDt
+			SET storeData.(XMLNSC.FIELD)TempCloseStartDt = {{TempCloseStartDt}}
+			-- Set Field TempCloseEndDt
+			SET storeData.(XMLNSC.FIELD)TempCloseEndDt = {{TempCloseEndDt}}
+				-- Generate Node UpgradeClassCd
+				CREATE LASTCHILD OF storeData AS upgradeClassCd TYPE XMLNSC.Folder NAME 'UpgradeClassCd';
+
+			-- Set Field LastDecorationCostAmt
+			SET storeData.(XMLNSC.FIELD)LastDecorationCostAmt = {{LastDecorationCostAmt}}
+			-- Set Field OrderStartDt
+			SET storeData.(XMLNSC.FIELD)OrderStartDt = {{OrderStartDt}}
+			-- Set Field OrderEndDt
+			SET storeData.(XMLNSC.FIELD)OrderEndDt = {{OrderEndDt}}
+			-- Set Field OrderTempStopStartDt
+			SET storeData.(XMLNSC.FIELD)OrderTempStopStartDt = {{OrderTempStopStartDt}}
+			-- Set Field OrderTempStopEndDt
+			SET storeData.(XMLNSC.FIELD)OrderTempStopEndDt = {{OrderTempStopEndDt}}
+				-- Generate Node TobaccoLicenseNbr
+				CREATE LASTCHILD OF storeData AS tobaccoLicenseNbr TYPE XMLNSC.Folder NAME 'TobaccoLicenseNbr';
+
+			-- Set Field MilkAreaCd
+			SET storeData.(XMLNSC.FIELD)MilkAreaCd = {{MilkAreaCd}}
+				-- Generate Node FinancialServicesInd
+				CREATE LASTCHILD OF storeData AS financialServicesInd TYPE XMLNSC.Folder NAME 'FinancialServicesInd';
+
+			-- Set Field PayrollUnitCd
+			SET storeData.(XMLNSC.FIELD)PayrollUnitCd = {{PayrollUnitCd}}
+			-- Set Field AuthorizedHeadCountNbr
+			SET storeData.(XMLNSC.FIELD)AuthorizedHeadCountNbr = {{AuthorizedHeadCountNbr}}
+			-- Set Field ManagerUserId
+			SET storeData.(XMLNSC.FIELD)ManagerUserId = {{ManagerUserId}}
+			-- Set Field ManagerEmployeeId
+			SET storeData.(XMLNSC.FIELD)ManagerEmployeeId = {{ManagerEmployeeId}}
+			-- Set Field SeaSectionCd
+			SET storeData.(XMLNSC.FIELD)SeaSectionCd = {{SeaSectionCd}}
+				-- Generate Node SeaSubsectionCd
+				CREATE LASTCHILD OF storeData AS seaSubsectionCd TYPE XMLNSC.Folder NAME 'SeaSubsectionCd';
+
+			-- Set Field TimeAndAttendanceSystemInd
+			SET storeData.(XMLNSC.FIELD)TimeAndAttendanceSystemInd = {{TimeAndAttendanceSystemInd}}
+				-- Generate Node TimeClockFormatCd
+				CREATE LASTCHILD OF storeData AS timeClockFormatCd TYPE XMLNSC.Folder NAME 'TimeClockFormatCd';
+
+
+			-- Generate Node StoreAddressData
+			CREATE LASTCHILD OF retailStoreData AS storeAddressData TYPE XMLNSC.Folder NAME 'StoreAddressData';
+			-- Set Field AddressLine1txt
+			SET storeAddressData.(XMLNSC.FIELD)AddressLine1txt = {{AddressLine1txt}}
+				-- Generate Node AddressLine2txt
+				CREATE LASTCHILD OF storeAddressData AS addressLine2txt TYPE XMLNSC.Folder NAME 'AddressLine2txt';
+
+			-- Set Field CityNm
+			SET storeAddressData.(XMLNSC.FIELD)CityNm = {{CityNm}}
+			-- Set Field CountyNm
+			SET storeAddressData.(XMLNSC.FIELD)CountyNm = {{CountyNm}}
+			-- Set Field PostalZoneCd
+			SET storeAddressData.(XMLNSC.FIELD)PostalZoneCd = {{PostalZoneCd}}
+			-- Set Field StateCd
+			SET storeAddressData.(XMLNSC.FIELD)StateCd = {{StateCd}}
+			-- Set Field CountryCd
+			SET storeAddressData.(XMLNSC.FIELD)CountryCd = {{CountryCd}}
+			-- Set Field PhoneNbr
+			SET storeAddressData.(XMLNSC.FIELD)PhoneNbr = {{PhoneNbr}}
+
+			MOVE retailStoreData NEXTSIBLING NAME 'retailStoreData'
+		END WHILE;
+
+	END;
+
+END MODULE;

@@ -39,5 +39,13 @@
             <version>2.4.0-b180830.0438</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-xjc -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-xjc</artifactId>
+            <version>2.4.0-b180830.0438</version>
+        </dependency>
+
+
     </dependencies>
 </project>
