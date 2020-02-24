@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@Path("/mermaid")
-@Api(value = "Mermaid Service")
-public class MermaidResource {
+@Path("/workshop")
+@Api(value = "Workshop Service")
+public class WorkshopResource {
 
     @POST
     @Path("/flowchart")

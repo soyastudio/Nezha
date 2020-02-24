@@ -23,7 +23,7 @@ public class JerseyConfig extends ResourceConfig {
         register(DeploymentResource.class);
         register(PipelineResource.class);
 
-        register(MermaidResource.class);
+        register(WorkshopResource.class);
 
         swaggerConfig();
     }
