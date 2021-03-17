@@ -14,7 +14,7 @@ import java.net.URL;
 
 public class XsKnowledgeBase<T> implements KnowledgeTreeBase<T, KnowledgeTree<SchemaTypeSystem, XsNode>> {
 
-    private T origin;
+    private T tao;
     private KnowledgeTree<SchemaTypeSystem, XsNode> knowledgeBase;
 
     private XsKnowledgeBase() {
@@ -23,7 +23,7 @@ public class XsKnowledgeBase<T> implements KnowledgeTreeBase<T, KnowledgeTree<Sc
 
     @Override
     public T tao() {
-        return origin;
+        return tao;
     }
 
     @Override
@@ -83,7 +83,6 @@ public class XsKnowledgeBase<T> implements KnowledgeTreeBase<T, KnowledgeTree<Sc
     }
 
     public static class XmlSchemaExtractor implements T123W.Extractor<SchemaTypeSystem> {
-
         private Object source;
         private SchemaTypeLoader schemaTypeLoader;
         private XmlOptions xmlOptions = new XmlOptions()
@@ -273,6 +272,5 @@ public class XsKnowledgeBase<T> implements KnowledgeTreeBase<T, KnowledgeTree<Sc
             System.out.println(sp.getName());
         }
     }
-
 
 }

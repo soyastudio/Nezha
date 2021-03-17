@@ -69,7 +69,7 @@ public class MoneyTree<K, T> extends Feature<K> implements KnowledgeTree<K, T> {
         return new MoneyTreeBuilder<K, T>();
     }
 
-    static class MoneyTreeBuilder<K, T> implements KnowledgeTreeBuilder<K, T>{
+    static class MoneyTreeBuilder<K, T> implements KnowledgeTreeBuilder<K, T> {
         private K knowledgeBase;
         private KnowledgeDigester<K, T> knowledgeDigester;
 

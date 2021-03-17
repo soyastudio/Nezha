@@ -35,10 +35,6 @@ public interface T123W<T, K extends Annotatable> {
         O extract() throws FlowBuilderException;
     }
 
-    interface Digester<T, K> {
-        K digest(T origin) throws FlowBuilderException;
-    }
-
     interface Annotator<K extends Annotatable> {
         void annotate(K knowledge) throws FlowExecutionException;
     }
@@ -82,7 +78,6 @@ public interface T123W<T, K extends Annotatable> {
     }
 
     interface Configuration {
-
     }
 
     class FlowException extends RuntimeException {
